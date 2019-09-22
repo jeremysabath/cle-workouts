@@ -31,6 +31,24 @@ const Container = styled(motion.div)`
   padding: 1em;
 `
 
+const Header = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-areas: "back title other";
+  margin-bottom: 2em;
+
+  & *:nth-child(1) {
+    grid-area: back;
+    width: fit-content;
+  }
+
+  & *:nth-child(2) {
+    grid-area: title;
+    text-align: center;
+    margin: 0;
+  }
+`
+
 const PlayerContainer = styled.div<{ selected: boolean }>`
   display: ${({ selected }): string => (selected ? "flex" : "block")};
 
@@ -73,10 +91,12 @@ const NewWorkout = ({
 
   return (
     <Container animate={{ y: 0 }} initial={{ y: "100%" }} exit={{ y: "100%" }}>
-      <Button onClick={onCancel}>Cancel</Button>
-      <h1>New Workout</h1>
+      <Header>
+        <Button onClick={onCancel}>Cancel</Button>
+        <h1>New Workout</h1>
+      </Header>
       <PlayerContainer selected={!!player}>
-        <h2>Player: </h2>
+        <h2>{player ? "" : "Select "}Player: </h2>
         {player ? (
           <SelectedPlayer>
             <PlayerCard
