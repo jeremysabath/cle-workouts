@@ -1,6 +1,8 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Card, Dimmer, Loader } from "semantic-ui-react"
-import styled from "styled-components"
+// @ts-ignore
+import { useMediaQuery } from "react-responsive"
+import styled, { ThemeContext } from "styled-components"
 import { Player } from "../../types"
 import PlayerCard from "./PlayerCard"
 
@@ -20,6 +22,10 @@ const PlayerGrid = styled.div`
 `
 
 const Players = ({ loading, error, players, onSelect }: Props): JSX.Element => {
+  const theme = useContext(ThemeContext)
+  console.log(theme)
+  const isSmallLayout = useMediaQuery({ maxWidth: theme.responsive.tablet - 1 })
+
   return (
     <Container>
       {error && <p>{error}</p>}
@@ -34,6 +40,7 @@ const Players = ({ loading, error, players, onSelect }: Props): JSX.Element => {
                 key={`player-list-${player.id}`}
                 player={player}
                 onSelect={onSelect}
+                small={isSmallLayout}
               />
             )
           )}

@@ -6,32 +6,23 @@ import logo from "../../assets/logo.png"
 interface Props {
   player: Player
   onSelect: (player: Player) => void
+  small?: boolean
 }
 
-const Container = styled.div`
+const Container = styled.div<{ small?: boolean }>`
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
-  display: flex;
+  display: ${({ small }): string => (small ? "flex" : "block")};
 
   & img {
-    width: 30%
-    max-height: 90px;
-    padding-top: 0.5em;
+    width: ${({ small }): string => (small ? "30%" : "100%")};
+    max-height: ${({ small }): string => (small ? "90px" : "unset")};
+    height: ${({ small }): string => (small ? "unset" : "180px")};
+    padding-top: ${({ small }): string => (small ? "0.5em" : "1em")};
     object-fit: contain;
     object-position: bottom;
     align-self: flex-end;
-  }
-
-  @media (min-width: ${({ theme }): string => theme.responsive.tablet}) {
-    display: block;
-
-    & img {
-      width: 100%;
-      max-height: unset;
-      height: 180px;
-      padding-top: 1em;
-    }
   }
 `
 
@@ -44,10 +35,10 @@ const Info = styled.div`
   }
 `
 
-const PlayerCard = ({ player, onSelect }: Props): JSX.Element => {
+const PlayerCard = ({ player, onSelect, small }: Props): JSX.Element => {
   const { name, number, position, imageSrc } = player
   return (
-    <Container onClick={(): void => onSelect(player)}>
+    <Container onClick={(): void => onSelect(player)} small={small}>
       <img src={imageSrc || logo} alt={`${name}'s headshot`} />
       <Info>
         <h3>{name}</h3>

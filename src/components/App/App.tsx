@@ -15,8 +15,8 @@ const theme = {
     black: "#000000",
   },
   responsive: {
-    phoneLandscape: "568px",
-    tablet: "768px",
+    phoneLandscape: 568,
+    tablet: 768,
   },
 }
 
@@ -27,7 +27,7 @@ const Container = styled.div`
   bottom: 0;
   left: 0;
 
-  @media (min-width: ${theme.responsive.tablet}) {
+  @media (min-width: ${theme.responsive.tablet}px) {
     font-size: 18px;
   }
 `

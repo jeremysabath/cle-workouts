@@ -26,7 +26,7 @@ const Main = styled.div`
   padding: 1em;
 
   @media (min-width: ${({ theme }): string =>
-      theme.responsive.phoneLandscape}) {
+      theme.responsive.phoneLandscape}px) {
     flex-direction: row;
   }
 `
@@ -41,7 +41,7 @@ const Logo = styled.div`
   }
 
   @media (min-width: ${({ theme }): string =>
-      theme.responsive.phoneLandscape}) {
+      theme.responsive.phoneLandscape}px) {
     text-align: right;
     margin: 0;
 
@@ -76,7 +76,7 @@ const Info = styled.div`
   }
 
   @media (min-width: ${({ theme }): string =>
-      theme.responsive.phoneLandscape}) {
+      theme.responsive.phoneLandscape}px) {
     text-align: left;
     align-items: unset;
     margin-left: 2em;
