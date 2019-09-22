@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import styled, { ThemeProvider } from "styled-components"
+import { AnimatePresence } from "framer-motion"
 import Start from "../Start/Start"
-import { NewWorkoutSession, WorkoutSession, Workout, Player } from "../../types"
+import { WorkoutSession, Workout, Player } from "../../types"
 import Workouts from "../Workouts/Workouts"
 import NewWorkout from "../NewWorkout/NewWorkout"
 import api from "../../api"
@@ -32,7 +33,7 @@ const Container = styled.div`
 `
 
 const App = (): JSX.Element => {
-  const [newWorkout, setNewWorkout] = useState<NewWorkoutSession | null>(null)
+  const [newWorkout, setNewWorkout] = useState(false)
   const [activeWorkouts, setActiveWorkouts] = useState<WorkoutSession[]>([])
   const [workoutsLoading, setWorkoutsLoading] = useState(false)
   const [workouts, setWorkouts] = useState<Workout[]>([])
@@ -43,7 +44,7 @@ const App = (): JSX.Element => {
 
   const handleStart = (): void => {
     console.log("handleStart")
-    setNewWorkout({ date: new Date() })
+    setNewWorkout(true)
   }
 
   const handleGetPlayers = async (): Promise<void> => {
@@ -85,18 +86,23 @@ const App = (): JSX.Element => {
         ) : (
           <Start onStart={handleStart} />
         )}
-        {newWorkout && (
-          <NewWorkout
-            getPlayers={handleGetPlayers}
-            playersLoading={playersLoading}
-            playersError={playersError}
-            players={players}
-            getWorkouts={handleGetWorkouts}
-            workoutsLoading={workoutsLoading}
-            workouts={workouts}
-            onStart={handleStartWorkout}
-          />
-        )}
+
+        <AnimatePresence>
+          {newWorkout && (
+            <NewWorkout
+              key="new-workout"
+              getPlayers={handleGetPlayers}
+              playersLoading={playersLoading}
+              playersError={playersError}
+              players={players}
+              getWorkouts={handleGetWorkouts}
+              workoutsLoading={workoutsLoading}
+              workouts={workouts}
+              onCancel={(): void => setNewWorkout(false)}
+              onStart={handleStartWorkout}
+            />
+          )}
+        </AnimatePresence>
       </Container>
     </ThemeProvider>
   )

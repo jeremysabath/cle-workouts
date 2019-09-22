@@ -1,6 +1,7 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Button } from "semantic-ui-react"
+import { motion } from "framer-motion"
 import { Player, Workout, WorkoutSession } from "../../types"
 import Players from "../Players/Players"
 
@@ -14,10 +15,11 @@ interface Props {
   workoutsLoading: boolean
   workouts: Workout[]
 
+  onCancel: () => void
   onStart: (workoutSession: WorkoutSession) => void
 }
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   position: absolute;
   top: 0;
   right: 0;
@@ -35,6 +37,7 @@ const NewWorkout = ({
   getWorkouts,
   workoutsLoading,
   workouts,
+  onCancel,
   onStart,
 }: Props): JSX.Element => {
   const [player, setPlayer] = useState<Player | null>(null)
@@ -42,8 +45,15 @@ const NewWorkout = ({
 
   console.log("render NewWorkout")
 
+  // Fetch players and workouts on mount.
+  useEffect((): void => {
+    getPlayers()
+    getWorkouts()
+  }, [])
+
   return (
-    <Container>
+    <Container animate={{ y: 0 }} initial={{ y: "100%" }} exit={{ y: "100%" }}>
+      <Button onClick={onCancel}>Cancel</Button>
       <h1>New Workout</h1>
       <h2>Player: </h2>
       {player ? (
