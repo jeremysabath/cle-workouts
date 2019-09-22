@@ -1,19 +1,12 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import moment from "moment"
 import { Button } from "semantic-ui-react"
+import useInterval from "@use-it/interval"
 import logo from "../../assets/logo.png"
 
 interface Props {
   onStart: () => void
-}
-
-const greetingForTime = (): string => {
-  const hour = Number(moment().format("HH"))
-  if (hour >= 18 && hour < 3) return "Good evening."
-  if (hour >= 3 && hour < 12) return "Good morning."
-  if (hour >= 12 && hour < 18) return "Good afternoon."
-  return "Hello"
 }
 
 const Container = styled.div`
@@ -100,20 +93,41 @@ const ThemeButton = styled(Button)`
   width: fit-content;
 `
 
-const Start = ({ onStart }: Props): JSX.Element => (
-  <Container>
-    <Main>
-      <Logo>
-        <img src={logo} alt="Cavaliers shield" />
-      </Logo>
-      <Info>
-        <h1>{greetingForTime()}</h1>
-        <h2>{moment().format("MMMM D, YYYY")}</h2>
-        <h2>{moment().format("h:mma")}</h2>
-        <ThemeButton onClick={onStart}>Start workout</ThemeButton>
-      </Info>
-    </Main>
-  </Container>
-)
+const Start = ({ onStart }: Props): JSX.Element => {
+  const greetingForTime = (): string => {
+    const hour = Number(moment().format("HH"))
+    if (hour >= 18 && hour < 3) return "Good evening."
+    if (hour >= 3 && hour < 12) return "Good morning."
+    if (hour >= 12 && hour < 18) return "Good afternoon."
+    return "Hello"
+  }
+
+  const [greeting, setGreeting] = useState(greetingForTime())
+  const [date, setDate] = useState(moment().format("MMMM D, YYYY"))
+  const [time, setTime] = useState(moment().format("h:mm a"))
+
+  // Update date, time, and greeting every 10 seconds.
+  useInterval((): void => {
+    setGreeting(greetingForTime())
+    setDate(moment().format("MMMM D, YYYY"))
+    setTime(moment().format("h:mm a"))
+  }, 10000)
+
+  return (
+    <Container>
+      <Main>
+        <Logo>
+          <img src={logo} alt="Cavaliers shield" />
+        </Logo>
+        <Info>
+          <h1>{greeting}</h1>
+          <h2>{date}</h2>
+          <h2>{time}</h2>
+          <ThemeButton onClick={onStart}>Start workout</ThemeButton>
+        </Info>
+      </Main>
+    </Container>
+  )
+}
 
 export default Start
