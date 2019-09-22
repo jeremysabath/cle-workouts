@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { Button, Table, TableBody } from "semantic-ui-react"
+import { Button, Table } from "semantic-ui-react"
 import { Workout, WorkoutCategory } from "../../types"
 
 interface Props {

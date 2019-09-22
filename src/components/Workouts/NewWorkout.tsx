@@ -114,6 +114,8 @@ const NewWorkout = ({
       player,
       workout,
       date: new Date(),
+      sets: [],
+      selected: true,
     })
   }
 

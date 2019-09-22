@@ -2,8 +2,8 @@ import React, { useState } from "react"
 import styled, { ThemeProvider } from "styled-components"
 import { AnimatePresence } from "framer-motion"
 import Start from "../Start/Start"
-import { WorkoutSession, Workout, Player } from "../../types"
-import Workouts from "../Workouts/ActiveWorkouts"
+import { WorkoutSession, Workout, Player, WorkoutFieldValue } from "../../types"
+import ActiveSessions from "../Workouts/ActiveSessions"
 import NewWorkout from "../Workouts/NewWorkout"
 import api from "../../api"
 
@@ -35,7 +35,8 @@ const Container = styled.div`
 
 const App = (): JSX.Element => {
   const [newWorkout, setNewWorkout] = useState(false)
-  const [activeWorkouts, setActiveWorkouts] = useState<WorkoutSession[]>([])
+  const [activeSessions, setActiveSessions] = useState<WorkoutSession[]>([])
+
   const [workoutsLoading, setWorkoutsLoading] = useState(false)
   const [workoutsError, setWorkoutsError] = useState<string | null>(null)
   const [workouts, setWorkouts] = useState<Workout[]>([])
@@ -84,16 +85,41 @@ const App = (): JSX.Element => {
   const handleStartWorkout = (workoutSession: WorkoutSession): void => {
     console.log("Start workout session!", workoutSession)
 
-    // Add new session to active workouts
-    setActiveWorkouts([...activeWorkouts, workoutSession])
+    // Add new session to active list and set it selected.
+    setActiveSessions([
+      ...activeSessions.map(
+        (session): WorkoutSession => ({
+          ...session,
+          selected: false,
+        })
+      ),
+      { ...workoutSession, selected: true },
+    ])
     setNewWorkout(false)
+  }
+
+  const handleChangeSet = (
+    sessionId: string,
+    setId: string,
+    fieldId: string,
+    nextValue: WorkoutFieldValue
+  ): void => {
+    console.log("handleChangeSet", sessionId, setId, fieldId, nextValue)
+  }
+
+  const handleAddSet = (sessionId: string): void => {
+    console.log("handleAddSet", sessionId)
   }
 
   return (
     <ThemeProvider theme={theme}>
       <Container>
-        {activeWorkouts.length > 0 ? (
-          <Workouts workouts={activeWorkouts} />
+        {activeSessions.length > 0 ? (
+          <ActiveSessions
+            sessions={activeSessions}
+            onChangeSet={handleChangeSet}
+            onAddSet={handleAddSet}
+          />
         ) : (
           <Start onStart={handleStart} />
         )}
