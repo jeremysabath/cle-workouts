@@ -3,8 +3,8 @@ import styled, { ThemeProvider } from "styled-components"
 import { AnimatePresence } from "framer-motion"
 import Start from "../Start/Start"
 import { WorkoutSession, Workout, Player } from "../../types"
-import Workouts from "../Workouts/Workouts"
-import NewWorkout from "../NewWorkout/NewWorkout"
+import Workouts from "../Workouts/ActiveWorkouts"
+import NewWorkout from "../Workouts/NewWorkout"
 import api from "../../api"
 
 const theme = {
@@ -17,6 +17,7 @@ const theme = {
   responsive: {
     phoneLandscape: 568,
     tablet: 768,
+    largeTablet: 1024,
   },
 }
 
@@ -36,6 +37,7 @@ const App = (): JSX.Element => {
   const [newWorkout, setNewWorkout] = useState(false)
   const [activeWorkouts, setActiveWorkouts] = useState<WorkoutSession[]>([])
   const [workoutsLoading, setWorkoutsLoading] = useState(false)
+  const [workoutsError, setWorkoutsError] = useState<string | null>(null)
   const [workouts, setWorkouts] = useState<Workout[]>([])
 
   const [playersLoading, setPlayersLoading] = useState(false)
@@ -55,7 +57,9 @@ const App = (): JSX.Element => {
       setPlayers(await api.getPlayers())
     } catch (error) {
       console.error("Error loading players: ", error)
-      setPlayersError("Something went wrong getting the list of players.")
+      setPlayersError(
+        "Sorry, something went wrong getting the list of players."
+      )
     } finally {
       setPlayersLoading(false)
     }
@@ -63,10 +67,15 @@ const App = (): JSX.Element => {
 
   const handleGetWorkouts = async (): Promise<void> => {
     setWorkoutsLoading(true)
+    setWorkoutsError(null)
+
     try {
       setWorkouts(await api.getWorkouts())
     } catch (error) {
       console.error("Error loading workouts: ", error)
+      setWorkoutsError(
+        "Sorry, something went wrong getting the list of workouts."
+      )
     } finally {
       setWorkoutsLoading(false)
     }
@@ -95,6 +104,7 @@ const App = (): JSX.Element => {
               players={players}
               getWorkouts={handleGetWorkouts}
               workoutsLoading={workoutsLoading}
+              workoutsError={workoutsError}
               workouts={workouts}
               onCancel={(): void => setNewWorkout(false)}
               onStart={handleStartWorkout}

@@ -1,4 +1,5 @@
 import hoop from "../assets/icons/hoop.svg"
+import barbell from "../assets/icons/barbell.svg"
 import { WorkoutCategory, Workout, WorkoutFieldType } from "../types"
 
 const categories: { [name: string]: WorkoutCategory } = {
@@ -6,6 +7,11 @@ const categories: { [name: string]: WorkoutCategory } = {
     id: "shooting",
     name: "Shooting",
     iconSrc: hoop,
+  },
+  strength: {
+    id: "strength",
+    name: "Strength",
+    iconSrc: barbell,
   },
 }
 
@@ -81,6 +87,29 @@ const workouts: Workout[] = [
             name: "Restricted area",
           },
         ],
+      },
+    ],
+  },
+  {
+    id: "bench-press",
+    name: "Bench press",
+    category: categories.strength,
+    fields: [
+      {
+        id: "weight",
+        name: "Weight",
+        type: WorkoutFieldType.Number,
+        unit: "lbs",
+      },
+      {
+        id: "reps",
+        name: "Reps",
+        type: WorkoutFieldType.Number,
+      },
+      {
+        id: "rest",
+        name: "Rest",
+        type: WorkoutFieldType.Time,
       },
     ],
   },

@@ -24,6 +24,7 @@ export interface BaseWorkoutField {
   id: string
   name: string
   type: WorkoutFieldType
+  unit?: string
 }
 
 export interface OptionsWorkoutField extends BaseWorkoutField {

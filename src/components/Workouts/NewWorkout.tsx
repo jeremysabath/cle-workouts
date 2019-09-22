@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Player, Workout, WorkoutSession } from "../../types"
 import Players from "../Players/Players"
 import PlayerCard from "../Players/PlayerCard"
+import Workouts from "./Workouts"
 
 interface Props {
   getPlayers: () => void
@@ -14,6 +15,7 @@ interface Props {
 
   getWorkouts: () => void
   workoutsLoading: boolean
+  workoutsError: string | null
   workouts: Workout[]
 
   onCancel: () => void
@@ -49,8 +51,10 @@ const Header = styled.div`
   }
 `
 
-const PlayerContainer = styled.div<{ selected: boolean }>`
-  display: ${({ selected }): string => (selected ? "flex" : "block")};
+const SectionContainer = styled.div<{ selected: boolean }>`
+  /* display: ${({ selected }): string => (selected ? "flex" : "block")}; */
+  display: block;
+  margin-bottom: 2em;
 
   & h2 {
     margin-right: 1em;
@@ -60,13 +64,23 @@ const PlayerContainer = styled.div<{ selected: boolean }>`
 const SelectedPlayer = styled.div`
   display: flex;
 
-  & *:first-child {
+  & > *:first-child {
+    flex: 1;
     margin-right: 1em;
   }
+`
 
-  & button {
-    height: 40px;
+const WorkoutsWrapper = styled.div<{ selected: boolean }>`
+  display: ${({ selected }): string => (selected ? "flex" : "block")};
+
+  & > *:first-child {
+    flex: ${({ selected }): string => (selected ? "1" : "unset")};
+    margin-right: ${({ selected }): string => (selected ? "1em" : "unset")};
   }
+`
+
+const DeleteButton = styled(Button)`
+  height: 40px;
 `
 
 const NewWorkout = ({
@@ -75,6 +89,7 @@ const NewWorkout = ({
   playersError,
   players,
   getWorkouts,
+  workoutsError,
   workoutsLoading,
   workouts,
   onCancel,
@@ -92,11 +107,11 @@ const NewWorkout = ({
   return (
     <Container animate={{ y: 0 }} initial={{ y: "100%" }} exit={{ y: "100%" }}>
       <Header>
-        <Button onClick={onCancel}>Cancel</Button>
+        <a onClick={onCancel}>Cancel</a>
         <h1>New Workout</h1>
       </Header>
-      <PlayerContainer selected={!!player}>
-        <h2>{player ? "" : "Select "}Player: </h2>
+      <SectionContainer selected={!!player}>
+        <h2>Select player: </h2>
         {player ? (
           <SelectedPlayer>
             <PlayerCard
@@ -104,7 +119,11 @@ const NewWorkout = ({
               onSelect={(): void => setPlayer(null)}
               small
             />
-            <Button icon="delete" onClick={(): void => setPlayer(null)} />
+            <DeleteButton
+              circle
+              icon="delete"
+              onClick={(): void => setPlayer(null)}
+            />
           </SelectedPlayer>
         ) : (
           <Players
@@ -114,7 +133,35 @@ const NewWorkout = ({
             onSelect={setPlayer}
           />
         )}
-      </PlayerContainer>
+      </SectionContainer>
+      {player && (
+        <SectionContainer selected={!!workout}>
+          <h2>Select workout: </h2>
+          <WorkoutsWrapper selected={!!workout}>
+            <Workouts
+              loading={workoutsLoading}
+              error={workoutsError}
+              workouts={workout ? [workout] : workouts}
+              onSelect={workout ? (): void => setWorkout(null) : setWorkout}
+              hideCategories={!!workout}
+            />
+            {workout && (
+              <DeleteButton
+                circle
+                icon="delete"
+                onClick={(): void => setWorkout(null)}
+              />
+            )}
+          </WorkoutsWrapper>
+          {!workout && (
+            <div style={{ marginTop: "1em", textAlign: "center" }}>
+              <a onClick={(): void => alert("Coming soon...")}>
+                Add a new workout
+              </a>
+            </div>
+          )}
+        </SectionContainer>
+      )}
     </Container>
   )
 }
