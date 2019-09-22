@@ -96,7 +96,7 @@ const ThemeButton = styled(Button)`
 const Start = ({ onStart }: Props): JSX.Element => {
   const greetingForTime = (): string => {
     const hour = Number(moment().format("HH"))
-    if (hour >= 18 && hour < 3) return "Good evening."
+    if (hour >= 18 || hour < 3) return "Good evening."
     if (hour >= 3 && hour < 12) return "Good morning."
     if (hour >= 12 && hour < 18) return "Good afternoon."
     return "Hello"

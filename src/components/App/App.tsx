@@ -83,6 +83,10 @@ const App = (): JSX.Element => {
 
   const handleStartWorkout = (workoutSession: WorkoutSession): void => {
     console.log("Start workout session!", workoutSession)
+
+    // Add new session to active workouts
+    setActiveWorkouts([...activeWorkouts, workoutSession])
+    setNewWorkout(false)
   }
 
   return (

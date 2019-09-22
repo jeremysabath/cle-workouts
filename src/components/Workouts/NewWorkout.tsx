@@ -98,6 +98,24 @@ const NewWorkout = ({
   const [player, setPlayer] = useState<Player | null>(null)
   const [workout, setWorkout] = useState<Workout | null>(null)
 
+  const handleStart = (): void => {
+    if (!player || !workout) {
+      console.error(
+        "Can't start workout, either player or workout isn't selected",
+        player,
+        workout
+      )
+      return
+    }
+
+    onStart({
+      id: String(Math.floor(Math.random() * 100000)),
+      player,
+      workout,
+      date: new Date(),
+    })
+  }
+
   // Fetch players and workouts on mount.
   useEffect((): void => {
     getPlayers()
@@ -162,6 +180,7 @@ const NewWorkout = ({
           )}
         </SectionContainer>
       )}
+      {player && workout && <Button onClick={handleStart}>Start!</Button>}
     </Container>
   )
 }
