@@ -80,7 +80,8 @@ const WorkoutsWrapper = styled.div<{ selected: boolean }>`
 `
 
 const DeleteButton = styled(Button)`
-  height: 40px;
+  height: 35px;
+  width: 35px;
 `
 
 const NewWorkout = ({
@@ -138,7 +139,7 @@ const NewWorkout = ({
               small
             />
             <DeleteButton
-              circle
+              circular
               icon="delete"
               onClick={(): void => setPlayer(null)}
             />
@@ -165,7 +166,7 @@ const NewWorkout = ({
             />
             {workout && (
               <DeleteButton
-                circle
+                circular
                 icon="delete"
                 onClick={(): void => setWorkout(null)}
               />
@@ -180,7 +181,11 @@ const NewWorkout = ({
           )}
         </SectionContainer>
       )}
-      {player && workout && <Button onClick={handleStart}>Start!</Button>}
+      {player && workout && (
+        <Button size="huge" onClick={handleStart}>
+          Start!
+        </Button>
+      )}
     </Container>
   )
 }
