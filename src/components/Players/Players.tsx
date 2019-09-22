@@ -23,7 +23,6 @@ const PlayerGrid = styled.div`
 
 const Players = ({ loading, error, players, onSelect }: Props): JSX.Element => {
   const theme = useContext(ThemeContext)
-  console.log(theme)
   const isSmallLayout = useMediaQuery({ maxWidth: theme.responsive.tablet - 1 })
 
   return (

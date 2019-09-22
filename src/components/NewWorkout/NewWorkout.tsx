@@ -31,6 +31,14 @@ const Container = styled(motion.div)`
   padding: 1em;
 `
 
+const PlayerContainer = styled.div<{ selected: boolean }>`
+  display: ${({ selected }): string => (selected ? "flex" : "block")};
+
+  & h2 {
+    margin-right: 1em;
+  }
+`
+
 const SelectedPlayer = styled.div`
   display: flex;
 
@@ -67,20 +75,26 @@ const NewWorkout = ({
     <Container animate={{ y: 0 }} initial={{ y: "100%" }} exit={{ y: "100%" }}>
       <Button onClick={onCancel}>Cancel</Button>
       <h1>New Workout</h1>
-      <h2>Player: </h2>
-      {player ? (
-        <SelectedPlayer>
-          <PlayerCard player={player} onSelect={(): void => setPlayer(null)} />
-          <Button icon="delete" onClick={(): void => setPlayer(null)} />
-        </SelectedPlayer>
-      ) : (
-        <Players
-          loading={playersLoading}
-          error={playersError}
-          players={players}
-          onSelect={setPlayer}
-        />
-      )}
+      <PlayerContainer selected={!!player}>
+        <h2>Player: </h2>
+        {player ? (
+          <SelectedPlayer>
+            <PlayerCard
+              player={player}
+              onSelect={(): void => setPlayer(null)}
+              small
+            />
+            <Button icon="delete" onClick={(): void => setPlayer(null)} />
+          </SelectedPlayer>
+        ) : (
+          <Players
+            loading={playersLoading}
+            error={playersError}
+            players={players}
+            onSelect={setPlayer}
+          />
+        )}
+      </PlayerContainer>
     </Container>
   )
 }
