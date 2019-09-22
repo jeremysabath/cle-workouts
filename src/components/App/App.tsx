@@ -4,7 +4,7 @@ import { AnimatePresence } from "framer-motion"
 import Start from "../Start/Start"
 import { WorkoutSession, Workout, Player, WorkoutFieldValue } from "../../types"
 import ActiveSessions from "../Workouts/ActiveSessions"
-import NewWorkout from "../Workouts/NewWorkout"
+import NewSession from "../Workouts/NewSession"
 import api from "../../api"
 
 const theme = {
@@ -34,7 +34,7 @@ const Container = styled.div`
 `
 
 const App = (): JSX.Element => {
-  const [newWorkout, setNewWorkout] = useState(false)
+  const [newSession, setNewSession] = useState(false)
   const [activeSessions, setActiveSessions] = useState<WorkoutSession[]>([])
 
   const [workoutsLoading, setWorkoutsLoading] = useState(false)
@@ -45,9 +45,9 @@ const App = (): JSX.Element => {
   const [playersError, setPlayersError] = useState<string | null>(null)
   const [players, setPlayers] = useState<Player[]>([])
 
-  const handleStart = (): void => {
-    console.log("handleStart")
-    setNewWorkout(true)
+  const handleAddSession = (): void => {
+    console.log("handleAddSession")
+    setNewSession(true)
   }
 
   const handleGetPlayers = async (): Promise<void> => {
@@ -95,7 +95,7 @@ const App = (): JSX.Element => {
       ),
       { ...workoutSession, selected: true },
     ])
-    setNewWorkout(false)
+    setNewSession(false)
   }
 
   const handleChangeSet = (
@@ -111,6 +111,32 @@ const App = (): JSX.Element => {
     console.log("handleAddSet", sessionId)
   }
 
+  const handleChangeSelectedSession = (id: string): void => {
+    const selected = activeSessions.find(
+      (session): boolean => session.id === id
+    )
+
+    if (!selected) {
+      console.error(
+        "Couldn't find selected session in active list",
+        id,
+        activeSessions
+      )
+      return
+    }
+
+    console.log("set session selected", selected)
+
+    setActiveSessions([
+      ...activeSessions.map(
+        (session): WorkoutSession => ({
+          ...session,
+          selected: session.id === id,
+        })
+      ),
+    ])
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
@@ -119,15 +145,17 @@ const App = (): JSX.Element => {
             sessions={activeSessions}
             onChangeSet={handleChangeSet}
             onAddSet={handleAddSet}
+            onChangeSelectedSession={handleChangeSelectedSession}
+            onAddSession={handleAddSession}
           />
         ) : (
-          <Start onStart={handleStart} />
+          <Start onStart={handleAddSession} />
         )}
 
         <AnimatePresence>
-          {newWorkout && (
-            <NewWorkout
-              key="new-workout"
+          {newSession && (
+            <NewSession
+              key="new-session"
               getPlayers={handleGetPlayers}
               playersLoading={playersLoading}
               playersError={playersError}
@@ -136,7 +164,7 @@ const App = (): JSX.Element => {
               workoutsLoading={workoutsLoading}
               workoutsError={workoutsError}
               workouts={workouts}
-              onCancel={(): void => setNewWorkout(false)}
+              onCancel={(): void => setNewSession(false)}
               onStart={handleStartWorkout}
             />
           )}

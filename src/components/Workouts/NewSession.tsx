@@ -84,7 +84,7 @@ const DeleteButton = styled(Button)`
   width: 35px;
 `
 
-const NewWorkout = ({
+const NewSession = ({
   getPlayers,
   playersLoading,
   playersError,
@@ -192,4 +192,4 @@ const NewWorkout = ({
   )
 }
 
-export default NewWorkout
+export default NewSession

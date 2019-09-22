@@ -1,8 +1,10 @@
 import React from "react"
 import styled from "styled-components"
+import { Button } from "semantic-ui-react"
 import { WorkoutSession, WorkoutFieldValue } from "../../types"
 import CustomWorkout from "./CustomWorkout"
 import WorkoutForm from "./WorkoutForm"
+import SessionTab from "./SessionTab"
 
 interface Props {
   sessions: WorkoutSession[]
@@ -13,18 +15,35 @@ interface Props {
     nextValue: WorkoutFieldValue
   ) => void
   onAddSet: (sessionId: string) => void
+  onChangeSelectedSession: (sessionId: string) => void
+  onAddSession: () => void
 }
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
+  height: 100%;
+  flex-direction: column-reverse;
 
-  @media (min-width: ${({ theme }): string => theme.responsive.tablet}) {
+  @media (min-width: ${({ theme }): string =>
+      theme.responsive.phoneLandscape}px) {
     flex-direction: row;
   }
 `
 
-const WorkoutTabs = styled.section``
+const WorkoutTabs = styled.section`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (min-width: ${({ theme }): string =>
+      theme.responsive.phoneLandscape}px) {
+    flex-direction: column;
+  }
+`
+
+const AddSessionButton = styled(Button)`
+  margin-top: 1em;
+`
 
 const ActiveSession = styled.section``
 
@@ -32,6 +51,8 @@ const ActiveSessions = ({
   sessions,
   onChangeSet,
   onAddSet,
+  onChangeSelectedSession,
+  onAddSession,
 }: Props): JSX.Element => {
   const selectedSession = sessions.find((session): boolean => session.selected)
 
@@ -40,12 +61,18 @@ const ActiveSessions = ({
       <WorkoutTabs>
         {sessions.map(
           (session): JSX.Element => (
-            <div key={session.id}>
-              <p>Player: {session.player.name}</p>
-              <p>Workout: {session.workout.name}</p>
-            </div>
+            <SessionTab
+              session={session}
+              onClick={(): void => onChangeSelectedSession(session.id)}
+            />
           )
         )}
+        <AddSessionButton
+          size="huge"
+          circular
+          icon="add"
+          onClick={onAddSession}
+        />
       </WorkoutTabs>
       {selectedSession && (
         <ActiveSession>
