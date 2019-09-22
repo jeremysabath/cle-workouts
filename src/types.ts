@@ -2,7 +2,9 @@ export interface Player {
   id: string
   name: string
   nickname: string
-  imageSrc: string
+  imageSrc?: string
+  number?: string
+  position: string
 }
 
 export interface WorkoutCategory {

@@ -1,6 +1,8 @@
 import React from "react"
-import { Dimmer, Loader } from "semantic-ui-react"
+import { Card, Dimmer, Loader } from "semantic-ui-react"
+import styled from "styled-components"
 import { Player } from "../../types"
+import PlayerCard from "./PlayerCard"
 
 interface Props {
   loading: boolean
@@ -9,31 +11,39 @@ interface Props {
   onSelect: (player: Player) => void
 }
 
+const Container = styled.div``
+
+const PlayerGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  grid-gap: 1em;
+`
+
 const Players = ({ loading, error, players, onSelect }: Props): JSX.Element => {
   return (
-    <div>
+    <Container>
       {error && <p>{error}</p>}
       {!loading && players.length === 0 && (
         <p>{`Couldn't find any players.`}</p>
       )}
-      {!loading &&
-        players.length > 0 &&
-        players.map(
-          (player): JSX.Element => (
-            <div
-              key={`player-list-${player.id}`}
-              onClick={() => onSelect(player)}
-            >
-              <img src={player.imageSrc} alt={`${player.name}'s headshot`} />
-              <p>{player.name}</p>
-            </div>
-          )
-        )}
+      {!loading && players.length > 0 && (
+        <PlayerGrid>
+          {players.map(
+            (player): JSX.Element => (
+              <PlayerCard
+                key={`player-list-${player.id}`}
+                player={player}
+                onSelect={onSelect}
+              />
+            )
+          )}
+        </PlayerGrid>
+      )}
 
       <Dimmer active={loading}>
         <Loader />
       </Dimmer>
-    </div>
+    </Container>
   )
 }
 

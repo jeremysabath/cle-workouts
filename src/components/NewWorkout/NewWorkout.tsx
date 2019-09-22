@@ -4,6 +4,7 @@ import { Button } from "semantic-ui-react"
 import { motion } from "framer-motion"
 import { Player, Workout, WorkoutSession } from "../../types"
 import Players from "../Players/Players"
+import PlayerCard from "../Players/PlayerCard"
 
 interface Props {
   getPlayers: () => void
@@ -27,6 +28,19 @@ const Container = styled(motion.div)`
   left: 0;
   background-color: white;
   color: black;
+  padding: 1em;
+`
+
+const SelectedPlayer = styled.div`
+  display: flex;
+
+  & *:first-child {
+    margin-right: 1em;
+  }
+
+  & button {
+    height: 40px;
+  }
 `
 
 const NewWorkout = ({
@@ -55,10 +69,10 @@ const NewWorkout = ({
       <h1>New Workout</h1>
       <h2>Player: </h2>
       {player ? (
-        <div>
-          <p>{player.name}</p>
+        <SelectedPlayer>
+          <PlayerCard player={player} onSelect={(): void => setPlayer(null)} />
           <Button icon="delete" onClick={(): void => setPlayer(null)} />
-        </div>
+        </SelectedPlayer>
       ) : (
         <Players
           loading={playersLoading}
