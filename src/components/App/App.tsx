@@ -76,8 +76,6 @@ const App = (): JSX.Element => {
     console.log("Start workout session!", workoutSession)
   }
 
-  console.log("new workout?", newWorkout)
-
   return (
     <ThemeProvider theme={theme}>
       <Container>

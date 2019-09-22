@@ -43,8 +43,6 @@ const NewWorkout = ({
   const [player, setPlayer] = useState<Player | null>(null)
   const [workout, setWorkout] = useState<Workout | null>(null)
 
-  console.log("render NewWorkout")
-
   // Fetch players and workouts on mount.
   useEffect((): void => {
     getPlayers()
@@ -66,6 +64,7 @@ const NewWorkout = ({
           loading={playersLoading}
           error={playersError}
           players={players}
+          onSelect={setPlayer}
         />
       )}
     </Container>

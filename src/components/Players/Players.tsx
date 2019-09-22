@@ -6,9 +6,10 @@ interface Props {
   loading: boolean
   error: string | null
   players: Player[]
+  onSelect: (player: Player) => void
 }
 
-const Players = ({ loading, error, players }: Props): JSX.Element => {
+const Players = ({ loading, error, players, onSelect }: Props): JSX.Element => {
   return (
     <div>
       {error && <p>{error}</p>}
@@ -19,7 +20,10 @@ const Players = ({ loading, error, players }: Props): JSX.Element => {
         players.length > 0 &&
         players.map(
           (player): JSX.Element => (
-            <div key={`player-list-${player.id}`}>
+            <div
+              key={`player-list-${player.id}`}
+              onClick={() => onSelect(player)}
+            >
               <img src={player.imageSrc} alt={`${player.name}'s headshot`} />
               <p>{player.name}</p>
             </div>
