@@ -33,7 +33,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(png|svg|jpg|gif|woff(2)?|ttf|eot)$/,
         use: ["file-loader"],
       },
     ],
@@ -53,7 +53,7 @@ module.exports = {
     new CopyFilesPlugin({
       sourceRoot: "./public",
       targetRoot: "./dist",
-      files: ["manifest.json", "web.config", "images/*"],
+      files: ["manifest.json", "web.config", "images/*", "favicon.png"],
     }),
   ],
   resolve: {

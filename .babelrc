@@ -11,6 +11,7 @@
     "@babel/proposal-class-properties",
     "@babel/proposal-object-rest-spread",
     "@babel/plugin-transform-runtime",
+    "@quickbaseoss/babel-plugin-styled-components-css-namespace",
     "babel-plugin-styled-components"
   ]
 }
