@@ -1,6 +1,10 @@
-import React from "react"
+import React, { useState } from "react"
 import styled, { ThemeProvider } from "styled-components"
 import Start from "../Start/Start"
+import { NewWorkoutSession, WorkoutSession, Workout, Player } from "../../types"
+import Workouts from "../Workouts/Workouts"
+import NewWorkout from "../NewWorkout/NewWorkout"
+import api from "../../api"
 
 const theme = {
   colors: {
@@ -28,14 +32,71 @@ const Container = styled.div`
 `
 
 const App = (): JSX.Element => {
+  const [newWorkout, setNewWorkout] = useState<NewWorkoutSession | null>(null)
+  const [activeWorkouts, setActiveWorkouts] = useState<WorkoutSession[]>([])
+  const [workoutsLoading, setWorkoutsLoading] = useState(false)
+  const [workouts, setWorkouts] = useState<Workout[]>([])
+
+  const [playersLoading, setPlayersLoading] = useState(false)
+  const [playersError, setPlayersError] = useState<string | null>(null)
+  const [players, setPlayers] = useState<Player[]>([])
+
   const handleStart = (): void => {
-    console.log("Start!")
+    console.log("handleStart")
+    setNewWorkout({ date: new Date() })
   }
+
+  const handleGetPlayers = async (): Promise<void> => {
+    setPlayersLoading(true)
+    setPlayersError(null)
+
+    try {
+      setPlayers(await api.getPlayers())
+    } catch (error) {
+      console.error("Error loading players: ", error)
+      setPlayersError("Something went wrong getting the list of players.")
+    } finally {
+      setPlayersLoading(false)
+    }
+  }
+
+  const handleGetWorkouts = async (): Promise<void> => {
+    setWorkoutsLoading(true)
+    try {
+      setWorkouts(await api.getWorkouts())
+    } catch (error) {
+      console.error("Error loading workouts: ", error)
+    } finally {
+      setWorkoutsLoading(false)
+    }
+  }
+
+  const handleStartWorkout = (workoutSession: WorkoutSession): void => {
+    console.log("Start workout session!", workoutSession)
+  }
+
+  console.log("new workout?", newWorkout)
 
   return (
     <ThemeProvider theme={theme}>
       <Container>
-        <Start onStart={handleStart} />
+        {activeWorkouts.length > 0 ? (
+          <Workouts workouts={activeWorkouts} />
+        ) : (
+          <Start onStart={handleStart} />
+        )}
+        {newWorkout && (
+          <NewWorkout
+            getPlayers={handleGetPlayers}
+            playersLoading={playersLoading}
+            playersError={playersError}
+            players={players}
+            getWorkouts={handleGetWorkouts}
+            workoutsLoading={workoutsLoading}
+            workouts={workouts}
+            onStart={handleStartWorkout}
+          />
+        )}
       </Container>
     </ThemeProvider>
   )
