@@ -72,7 +72,7 @@ const Info = styled.div`
 
   & button {
     margin-top: 2em;
-    font-size: 1em;
+    font-size: 1.2em;
   }
 
   @media (min-width: ${({ theme }): string =>

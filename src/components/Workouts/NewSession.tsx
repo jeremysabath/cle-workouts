@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Button } from "semantic-ui-react"
 import { motion } from "framer-motion"
+import moment from "moment"
 import { Player, Workout, WorkoutSession } from "../../types"
 import Players from "../Players/Players"
 import PlayerCard from "../Players/PlayerCard"
@@ -110,11 +111,21 @@ const NewSession = ({
       return
     }
 
+    // Date, rounded to 15 minute marks.
+    const now = moment()
+    console.log("now", now)
+    const roundedDown = Math.floor(now.minute() / 15) * 15
+    console.log("roundedDown", roundedDown)
+    now.minutes(roundedDown)
+    now.seconds(0)
+    now.milliseconds(0)
+    console.log("now w/ roundedDown", now)
+
     onStart({
       id: randomId(),
       player,
       workout,
-      date: new Date(),
+      date: now.toDate(),
       sets: [],
       selected: true,
     })

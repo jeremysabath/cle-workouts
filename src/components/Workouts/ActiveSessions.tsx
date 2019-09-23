@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { Button, TextArea, Form } from "semantic-ui-react"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 import { WorkoutSession, WorkoutFieldValue } from "../../types"
 import CustomWorkout from "./CustomWorkout"
 import WorkoutForm from "./WorkoutForm"
@@ -8,6 +10,7 @@ import SessionTab from "./SessionTab"
 
 interface Props {
   sessions: WorkoutSession[]
+  onChangeSessionDate: (sessionId: string, date: Date | null) => void
   onChangeSet: (
     sessionId: string,
     setId: string,
@@ -86,12 +89,65 @@ const ActiveSession = styled.section`
   & > h1 {
     margin-bottom: 0.25em;
   }
+`
+
+const SessionMeta = styled.div`
+  display: flex;
+  align-items: baseline;
 
   & > h2 {
     margin-top: 0;
     margin-bottom: 1.5em;
     font-size: 1em;
     font-weight: 500;
+    margin-right: 1em;
+  }
+`
+
+const DateTimePicker = styled.div`
+  display: flex;
+  justify-content: flex-start;
+
+  & .cavs-date-picker {
+    border: none;
+    padding: 0;
+    display: block;
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+    line-height: 1.28571429em;
+    color: #4183c4;
+    text-decoration: underline;
+    outline: none;
+
+    &--date {
+      text-align: right;
+      width: 5em;
+    }
+
+    &--time {
+      text-align: left;
+      width: 4.375em;
+    }
+  }
+
+  & .react-datepicker--time-only {
+    & .react-datepicker__triangle {
+      border-bottom-color: white;
+    }
+
+    & .react-datepicker__header {
+      display: none;
+    }
+  }
+
+  & .react-datepicker__time-list-item {
+    height: unset !important;
+    padding: 0.8em !important;
+  }
+
+  & span {
+    z-index: 1;
+    margin: 0 0.5em;
+    color: #4183c4;
   }
 `
 
@@ -126,6 +182,7 @@ const CompleteButton = styled(Button)`
 
 const ActiveSessions = ({
   sessions,
+  onChangeSessionDate,
   onChangeSet,
   onAddSet,
   onChangeSelectedSession,
@@ -160,7 +217,32 @@ const ActiveSessions = ({
       {selectedSession && (
         <ActiveSession>
           <h1>{selectedSession.player.name}</h1>
-          <h2>{selectedSession.workout.name}</h2>
+          <SessionMeta>
+            <h2>{selectedSession.workout.name}</h2>
+            <DateTimePicker>
+              <DatePicker
+                dateFormat="M/d/yyyy"
+                selected={selectedSession.date}
+                onChange={(date): void =>
+                  onChangeSessionDate(selectedSession.id, date)
+                }
+                todayButton="Today"
+                className="cavs-date-picker cavs-date-picker--date"
+              />
+              <span> @ </span>
+              <DatePicker
+                dateFormat="h:mm aa"
+                selected={selectedSession.date}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                onChange={(date): void =>
+                  onChangeSessionDate(selectedSession.id, date)
+                }
+                className="cavs-date-picker cavs-date-picker--time"
+              />
+            </DateTimePicker>
+          </SessionMeta>
           <SessionContent>
             {selectedSession.workout.hasCustomForm ? (
               <CustomWorkout

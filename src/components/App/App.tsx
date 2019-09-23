@@ -116,6 +116,34 @@ const App = (): JSX.Element => {
     setNewSession(false)
   }
 
+  const handleChangeSessionDate = (
+    sessionId: string,
+    date: Date | null
+  ): void => {
+    console.log("handleChangeSessionDate", sessionId, date)
+
+    if (!date) return
+
+    const indexToUpdate = activeSessions.findIndex(
+      (session): boolean => session.id === sessionId
+    )
+
+    if (indexToUpdate < 0) {
+      console.error(
+        "Couldn't find session, can't edit date.",
+        sessionId,
+        activeSessions
+      )
+      return
+    }
+
+    const sessionWithNewDate = { ...activeSessions[indexToUpdate], date }
+    const updatedSessions = [...activeSessions]
+    updatedSessions.splice(indexToUpdate, 1, sessionWithNewDate)
+    console.log("updatedSessions", updatedSessions)
+    setActiveSessions(updatedSessions)
+  }
+
   const handleChangeSet = (
     sessionId: string,
     setId: string,
@@ -232,6 +260,7 @@ const App = (): JSX.Element => {
         {activeSessions.length > 0 ? (
           <ActiveSessions
             sessions={activeSessions}
+            onChangeSessionDate={handleChangeSessionDate}
             onChangeSet={handleChangeSet}
             onAddSet={handleAddSet}
             onChangeSelectedSession={handleChangeSelectedSession}
