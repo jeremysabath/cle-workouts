@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { Button, TextArea, Form, Modal } from "semantic-ui-react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { WorkoutSession, WorkoutFieldValue, Workout } from "../../types"
+import { WorkoutSession, WorkoutFieldValue, Workout, Player } from "../../types"
 import CustomWorkout from "./CustomWorkout"
 import WorkoutForm from "./WorkoutForm"
 import SessionTab from "./SessionTab"
@@ -22,7 +22,7 @@ interface Props {
   onDiscardSession: (sessionId: string) => void
   onAddSet: (sessionId: string) => void
   onChangeSelectedSession: (sessionId: string) => void
-  onAddSession: () => void
+  onAddSession: (player?: Player, workout?: Workout) => void
 }
 
 const Container = styled.div`
@@ -231,16 +231,31 @@ const ActiveSessions = ({
   const handleDone = (): void => {
     console.log("handle done")
     onCompleteSession((selectedSession as WorkoutSession).id)
+    setRequestComplete(false)
   }
 
   const handleStartAnother = (): void => {
-    console.log("handle start another")
+    if (!selectedSession) {
+      console.error(
+        "No selectedSession in handleStartAnother, can't start another"
+      )
+      return
+    }
+
+    const { player, id } = selectedSession
+
+    onAddSession(player)
+    setRequestComplete(false)
+    window.setTimeout((): void => onCompleteSession(id), 250)
   }
 
   const handleDiscard = (): void => {
     console.log("handle discard")
     onDiscardSession((selectedSession as WorkoutSession).id)
+    setRequestDiscard(false)
   }
+
+  const activePlayer = selectedSession ? selectedSession.player : null
 
   return (
     <Container>
@@ -331,7 +346,7 @@ const ActiveSessions = ({
         </ActiveSession>
       )}
       <ConfirmModal
-        size="mini"
+        size="tiny"
         dimmer="inverted"
         open={requestComplete || requestDiscard}
         header={requestComplete ? "Workout complete" : "Discard workout"}
@@ -345,8 +360,8 @@ const ActiveSessions = ({
             ? [
                 {
                   key: "another",
-                  content: `New workout with ${
-                    (selectedSession as WorkoutSession).player.nickname
+                  content: `New workout${
+                    activePlayer ? ` with ${activePlayer.nickname}` : ""
                   }`,
                   onClick: handleStartAnother,
                 },

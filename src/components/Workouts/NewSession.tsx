@@ -2,14 +2,17 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Button } from "semantic-ui-react"
 import { motion } from "framer-motion"
-import moment from "moment"
-import { Player, Workout, WorkoutSession } from "../../types"
+import { Player, Workout, WorkoutSession, NewWorkoutSession } from "../../types"
 import Players from "../Players/Players"
 import PlayerCard from "../Players/PlayerCard"
 import Workouts from "./Workouts"
 import { randomId } from "../../helpers"
 
 interface Props {
+  session: NewWorkoutSession
+  selectPlayer: (player: Player | null) => void
+  selectWorkout: (workout: Workout | null) => void
+
   getPlayers: () => void
   playersLoading: boolean
   playersError: string | null
@@ -104,6 +107,9 @@ const StartButton = styled(Button)`
 `
 
 const NewSession = ({
+  session,
+  selectPlayer,
+  selectWorkout,
   getPlayers,
   playersLoading,
   playersError,
@@ -115,8 +121,7 @@ const NewSession = ({
   onCancel,
   onStart,
 }: Props): JSX.Element => {
-  const [player, setPlayer] = useState<Player | null>(null)
-  const [workout, setWorkout] = useState<Workout | null>(null)
+  const { player, workout, date } = session
 
   const handleStart = (): void => {
     if (!player || !workout) {
@@ -128,21 +133,11 @@ const NewSession = ({
       return
     }
 
-    // Date, rounded to 15 minute marks.
-    const now = moment()
-    console.log("now", now)
-    const roundedDown = Math.floor(now.minute() / 15) * 15
-    console.log("roundedDown", roundedDown)
-    now.minutes(roundedDown)
-    now.seconds(0)
-    now.milliseconds(0)
-    console.log("now w/ roundedDown", now)
-
     onStart({
       id: randomId(),
       player,
       workout,
-      date: now.toDate(),
+      date,
       sets: [],
       selected: true,
     })
@@ -167,13 +162,13 @@ const NewSession = ({
             <SelectedPlayer>
               <PlayerCard
                 player={player}
-                onSelect={(): void => setPlayer(null)}
+                onSelect={(): void => selectPlayer(null)}
                 small
               />
               <DeleteButton
                 circular
                 icon="delete"
-                onClick={(): void => setPlayer(null)}
+                onClick={(): void => selectPlayer(null)}
               />
             </SelectedPlayer>
           ) : (
@@ -181,7 +176,7 @@ const NewSession = ({
               loading={playersLoading}
               error={playersError}
               players={players}
-              onSelect={setPlayer}
+              onSelect={selectPlayer}
             />
           )}
         </SectionContainer>
@@ -193,14 +188,16 @@ const NewSession = ({
                 loading={workoutsLoading}
                 error={workoutsError}
                 workouts={workout ? [workout] : workouts}
-                onSelect={workout ? (): void => setWorkout(null) : setWorkout}
+                onSelect={
+                  workout ? (): void => selectWorkout(null) : selectWorkout
+                }
                 hideCategories={!!workout}
               />
               {workout && (
                 <DeleteButton
                   circular
                   icon="delete"
-                  onClick={(): void => setWorkout(null)}
+                  onClick={(): void => selectWorkout(null)}
                 />
               )}
             </WorkoutsWrapper>

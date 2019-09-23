@@ -11,11 +11,12 @@ import {
   WorkoutData,
   WorkoutFieldType,
   OptionsWorkoutData,
+  NewWorkoutSession,
 } from "../../types"
 import ActiveSessions from "../Workouts/ActiveSessions"
 import NewSession from "../Workouts/NewSession"
 import api from "../../api"
-import { randomId } from "../../helpers"
+import { randomId, roundedDate, isPlayer, isWorkout } from "../../helpers"
 import courtEmpty from "../../assets/court-empty.png"
 import courtTopSelected from "../../assets/court-top-selected.png"
 
@@ -52,7 +53,7 @@ const Container = styled.div`
 `
 
 const App = (): JSX.Element => {
-  const [newSession, setNewSession] = useState(false)
+  const [newSession, setNewSession] = useState<NewWorkoutSession | null>(null)
   const [activeSessions, setActiveSessions] = useState<WorkoutSession[]>([])
 
   const [workoutsLoading, setWorkoutsLoading] = useState(false)
@@ -63,8 +64,22 @@ const App = (): JSX.Element => {
   const [playersError, setPlayersError] = useState<string | null>(null)
   const [players, setPlayers] = useState<Player[]>([])
 
-  const handleAddSession = (player?: Player): void => {
-    setNewSession(true)
+  const handleAddSession = (player?: Player, workout?: Workout): void => {
+    setNewSession({
+      player: isPlayer(player) ? player : null,
+      workout: isWorkout(workout) ? workout : null,
+      date: roundedDate(),
+    })
+  }
+
+  const handleSelectPlayer = (player: Player | null): void => {
+    if (!newSession) return
+    setNewSession({ ...newSession, player })
+  }
+
+  const handleSelectWorkout = (workout: Workout | null): void => {
+    if (!newSession) return
+    setNewSession({ ...newSession, workout })
   }
 
   const handleGetPlayers = async (): Promise<void> => {
@@ -110,7 +125,7 @@ const App = (): JSX.Element => {
       ),
       { ...workoutSession, selected: true },
     ])
-    setNewSession(false)
+    setNewSession(null)
   }
 
   const handleCompleteSession = (sessionId: string): void => {
@@ -129,6 +144,17 @@ const App = (): JSX.Element => {
 
     const updatedSessions = [...activeSessions]
     updatedSessions.splice(indexToComplete, 1)
+
+    // Select the just-prior session.
+    if (updatedSessions.length > 0) {
+      const selectedIndex = indexToComplete > 0 ? indexToComplete - 1 : 0
+      const newlySelected = {
+        ...updatedSessions[selectedIndex],
+        selected: true,
+      }
+      updatedSessions.splice(selectedIndex, 1, newlySelected)
+    }
+
     setActiveSessions(updatedSessions)
   }
 
@@ -308,6 +334,9 @@ const App = (): JSX.Element => {
           {newSession && (
             <NewSession
               key="new-session"
+              session={newSession}
+              selectPlayer={handleSelectPlayer}
+              selectWorkout={handleSelectWorkout}
               getPlayers={handleGetPlayers}
               playersLoading={playersLoading}
               playersError={playersError}
@@ -316,7 +345,7 @@ const App = (): JSX.Element => {
               workoutsLoading={workoutsLoading}
               workoutsError={workoutsError}
               workouts={workouts}
-              onCancel={(): void => setNewSession(false)}
+              onCancel={(): void => setNewSession(null)}
               onStart={handleStartWorkout}
             />
           )}
