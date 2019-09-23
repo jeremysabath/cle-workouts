@@ -7,10 +7,7 @@ import {
   Workout,
   Player,
   WorkoutFieldValue,
-  WorkoutSet,
   WorkoutData,
-  WorkoutFieldType,
-  OptionsWorkoutData,
   NewWorkoutSession,
 } from "../../types"
 import ActiveSessions from "../Workouts/ActiveSessions"

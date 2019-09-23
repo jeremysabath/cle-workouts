@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import styled from "styled-components"
 import { Popup, Button } from "semantic-ui-react"
 import courtEmpty from "../../../assets/court-empty.png"
@@ -67,37 +67,37 @@ const StatOverlay = styled.div`
   font-size: 1.25em;
 `
 
-const Dismisser = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-`
+// const Dismisser = styled.div`
+//   position: fixed;
+//   top: 0;
+//   right: 0;
+//   bottom: 0;
+//   left: 0;
+// `
 
-const CourtLeft = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 70%;
-  bottom: 0;
-`
+// const CourtLeft = styled.div`
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   right: 70%;
+//   bottom: 0;
+// `
 
-const CourtRight = styled.div`
-  position: absolute;
-  top: 0;
-  left: 70%;
-  right: 0%;
-  bottom: 0;
-`
+// const CourtRight = styled.div`
+//   position: absolute;
+//   top: 0;
+//   left: 70%;
+//   right: 0%;
+//   bottom: 0;
+// `
 
-const CloseToBasket = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 58%;
-`
+// const CloseToBasket = styled.div`
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom: 58%;
+// `
 
 const SpotUpShooting = ({
   session,
@@ -105,8 +105,7 @@ const SpotUpShooting = ({
   onAddSet,
 }: Props): JSX.Element => {
   const [topSelected, setTopSelected] = useState(false)
-  // const [makes, setMakes] = useState(0)
-  // const [attempts, setAttempts] = useState(0)
+  const topOfTheKeyRef = useRef<HTMLDivElement>(null)
 
   const dummySet = session.sets[0]
   const makes =
@@ -117,10 +116,15 @@ const SpotUpShooting = ({
     dummySet && typeof dummySet.data.attempts.value === "number"
       ? dummySet.data.attempts.value
       : 0
-  console.log("makes/attempts", makes, attempts)
 
+  // Add an initial set on load
   useEffect((): void => {
     if (session.sets.length === 0) onAddSet(session.id)
+  }, [])
+
+  // On unmount, hide the make/miss tracker.
+  useEffect((): (() => void) => {
+    return (): void => setTopSelected(false)
   }, [])
 
   const handleMake = (): void => {
@@ -146,10 +150,6 @@ const SpotUpShooting = ({
         src={topSelected ? courtTopSelected : courtEmpty}
         alt={topSelected ? "court top of key 3 highlight" : "half court view"}
       />
-      {topSelected && <Dismisser onClick={(): void => setTopSelected(false)} />}
-      {/* <CourtLeft onClick={(): void => setTopSelected(false)} />
-      <CourtRight onClick={(): void => setTopSelected(false)} />
-      <CloseToBasket onClick={(): void => setTopSelected(false)} /> */}
       {!topSelected && attempts > 0 && (
         <StatOverlay>
           <p>
@@ -159,9 +159,16 @@ const SpotUpShooting = ({
       )}
       <Popup
         trigger={
-          <TopOfTheKey onClick={(): void => setTopSelected(!topSelected)} />
+          // eslint-disable-next-line
+          <TopOfTheKey
+            ref={topOfTheKeyRef}
+            onClick={(): void => setTopSelected(!topSelected)}
+          />
         }
         open={topSelected}
+        onClose={(e): void => {
+          if (topOfTheKeyRef.current !== e.target) setTopSelected(false)
+        }}
         position="top center"
       >
         <PopupInner>

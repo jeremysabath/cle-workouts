@@ -311,12 +311,14 @@ const ActiveSessions = ({
           <SessionContent>
             {selectedSession.workout.hasCustomForm ? (
               <CustomWorkout
+                key={`custom-workout-form-${selectedSession.id}`}
                 session={selectedSession}
                 onChangeSet={onChangeSet}
                 onAddSet={onAddSet}
               />
             ) : (
               <WorkoutForm
+                key={`workout-form-${selectedSession.id}`}
                 session={selectedSession}
                 onChangeSet={onChangeSet}
                 onAddSet={onAddSet}
