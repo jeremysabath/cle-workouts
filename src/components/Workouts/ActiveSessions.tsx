@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { Button, TextArea, Form } from "semantic-ui-react"
+import { Button, TextArea, Form, Modal } from "semantic-ui-react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { WorkoutSession, WorkoutFieldValue } from "../../types"
+import { WorkoutSession, WorkoutFieldValue, Workout } from "../../types"
 import CustomWorkout from "./CustomWorkout"
 import WorkoutForm from "./WorkoutForm"
 import SessionTab from "./SessionTab"
@@ -18,6 +18,8 @@ interface Props {
     fieldId: string,
     nextValue: WorkoutFieldValue
   ) => void
+  onCompleteSession: (sessionId: string) => void
+  onDiscardSession: (sessionId: string) => void
   onAddSet: (sessionId: string) => void
   onChangeSelectedSession: (sessionId: string) => void
   onAddSession: () => void
@@ -181,6 +183,15 @@ const Sidebar = styled.section`
   & > form {
     margin-bottom: 1em;
   }
+
+  & > a {
+    font-size: 0.8em;
+    color: red;
+    text-decoration: none;
+    margin-top: 0.5em;
+    display: block;
+    text-align: center;
+  }
 `
 
 const CompleteButton = styled(Button)`
@@ -194,11 +205,20 @@ const CompleteButton = styled(Button)`
   }
 `
 
+const ConfirmModal = styled(Modal)`
+  & .cavs-confirm-done {
+    background-color: ${({ theme }): string => theme.colors.wine};
+    color: white;
+  }
+`
+
 const ActiveSessions = ({
   sessions,
   onChangeSessionDate,
   onChangeSessionNotes,
   onChangeSet,
+  onCompleteSession,
+  onDiscardSession,
   onAddSet,
   onChangeSelectedSession,
   onAddSession,
@@ -206,6 +226,21 @@ const ActiveSessions = ({
   const selectedSession = sessions.find((session): boolean => session.selected)
 
   const [requestComplete, setRequestComplete] = useState(false)
+  const [requestDiscard, setRequestDiscard] = useState(false)
+
+  const handleDone = (): void => {
+    console.log("handle done")
+    onCompleteSession((selectedSession as WorkoutSession).id)
+  }
+
+  const handleStartAnother = (): void => {
+    console.log("handle start another")
+  }
+
+  const handleDiscard = (): void => {
+    console.log("handle discard")
+    onDiscardSession((selectedSession as WorkoutSession).id)
+  }
 
   return (
     <Container>
@@ -288,10 +323,55 @@ const ActiveSessions = ({
                 content="Complete workout"
                 size="huge"
               />
+              <a onClick={(): void => setRequestDiscard(true)}>
+                Discard workout
+              </a>
             </Sidebar>
           </SessionContent>
         </ActiveSession>
       )}
+      <ConfirmModal
+        size="mini"
+        dimmer="inverted"
+        open={requestComplete || requestDiscard}
+        header={requestComplete ? "Workout complete" : "Discard workout"}
+        content={
+          requestComplete
+            ? null
+            : "Are you sure you want to discard this workout? No workout data will be saved."
+        }
+        actions={
+          requestComplete
+            ? [
+                {
+                  key: "another",
+                  content: `New workout with ${
+                    (selectedSession as WorkoutSession).player.nickname
+                  }`,
+                  onClick: handleStartAnother,
+                },
+                {
+                  key: "done",
+                  content: "Done",
+                  onClick: handleDone,
+                  className: "cavs-confirm-done",
+                },
+              ]
+            : [
+                {
+                  key: "cancel",
+                  content: "Cancel",
+                  onClick: (): void => setRequestDiscard(false),
+                },
+                {
+                  key: "discard",
+                  content: "Yes, discard",
+                  onClick: handleDiscard,
+                  negative: true,
+                },
+              ]
+        }
+      />
     </Container>
   )
 }

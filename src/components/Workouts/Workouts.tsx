@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import styled from "styled-components"
+import sortBy from "lodash.sortby"
 import { Button, Table } from "semantic-ui-react"
 import { Workout, WorkoutCategory } from "../../types"
-import sortBy from "lodash.sortby"
 
 interface Props {
   loading: boolean

@@ -27,7 +27,7 @@ courtTopSelectedImg.src = courtTopSelected
 
 const theme = {
   colors: {
-    wine: "#6F263D",
+    wine: "#7e3c50",
     navy: "#041E42",
     gold: "#FFB81C",
     black: "#000000",
@@ -63,7 +63,7 @@ const App = (): JSX.Element => {
   const [playersError, setPlayersError] = useState<string | null>(null)
   const [players, setPlayers] = useState<Player[]>([])
 
-  const handleAddSession = (): void => {
+  const handleAddSession = (player?: Player): void => {
     setNewSession(true)
   }
 
@@ -111,6 +111,31 @@ const App = (): JSX.Element => {
       { ...workoutSession, selected: true },
     ])
     setNewSession(false)
+  }
+
+  const handleCompleteSession = (sessionId: string): void => {
+    const indexToComplete = activeSessions.findIndex(
+      (session): boolean => session.id === sessionId
+    )
+
+    if (indexToComplete < 0) {
+      console.error(
+        "Couldn't find session, can't mark complete.",
+        sessionId,
+        activeSessions
+      )
+      return
+    }
+
+    const updatedSessions = [...activeSessions]
+    updatedSessions.splice(indexToComplete, 1)
+    setActiveSessions(updatedSessions)
+  }
+
+  const handleDiscardSession = (sessionId: string): void => {
+    // Since for demo we just dump completed sessions any, discard is
+    // the same as complete.
+    handleCompleteSession(sessionId)
   }
 
   const handleChangeSessionDate = (
@@ -269,6 +294,8 @@ const App = (): JSX.Element => {
             onChangeSessionDate={handleChangeSessionDate}
             onChangeSessionNotes={handleChangeSessionNotes}
             onChangeSet={handleChangeSet}
+            onCompleteSession={handleCompleteSession}
+            onDiscardSession={handleDiscardSession}
             onAddSet={handleAddSet}
             onChangeSelectedSession={handleChangeSelectedSession}
             onAddSession={handleAddSession}
