@@ -185,10 +185,9 @@ const Sidebar = styled.section`
   }
 
   & > a {
-    font-size: 0.8em;
     color: red;
     text-decoration: none;
-    margin-top: 0.5em;
+    margin-top: 1em;
     display: block;
     text-align: center;
   }
