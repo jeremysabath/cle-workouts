@@ -64,7 +64,6 @@ const App = (): JSX.Element => {
   const [players, setPlayers] = useState<Player[]>([])
 
   const handleAddSession = (): void => {
-    console.log("handleAddSession")
     setNewSession(true)
   }
 
@@ -101,8 +100,6 @@ const App = (): JSX.Element => {
   }
 
   const handleStartWorkout = (workoutSession: WorkoutSession): void => {
-    console.log("Start workout session!", workoutSession)
-
     // Add new session to active list and set it selected.
     setActiveSessions([
       ...activeSessions.map(
@@ -120,8 +117,6 @@ const App = (): JSX.Element => {
     sessionId: string,
     date: Date | null
   ): void => {
-    console.log("handleChangeSessionDate", sessionId, date)
-
     if (!date) return
 
     const indexToUpdate = activeSessions.findIndex(
@@ -140,7 +135,26 @@ const App = (): JSX.Element => {
     const sessionWithNewDate = { ...activeSessions[indexToUpdate], date }
     const updatedSessions = [...activeSessions]
     updatedSessions.splice(indexToUpdate, 1, sessionWithNewDate)
-    console.log("updatedSessions", updatedSessions)
+    setActiveSessions(updatedSessions)
+  }
+
+  const handleChangeSessionNotes = (sessionId: string, notes: string): void => {
+    const indexToUpdate = activeSessions.findIndex(
+      (session): boolean => session.id === sessionId
+    )
+
+    if (indexToUpdate < 0) {
+      console.error(
+        "Couldn't find session, can't edit notes.",
+        sessionId,
+        activeSessions
+      )
+      return
+    }
+
+    const sessionWithNewNotes = { ...activeSessions[indexToUpdate], notes }
+    const updatedSessions = [...activeSessions]
+    updatedSessions.splice(indexToUpdate, 1, sessionWithNewNotes)
     setActiveSessions(updatedSessions)
   }
 
@@ -150,8 +164,6 @@ const App = (): JSX.Element => {
     fieldId: string,
     nextValue: WorkoutFieldValue
   ): void => {
-    console.log("handleChangeSet", sessionId, setId, fieldId, nextValue)
-
     const sessionIndexToUpdate = activeSessions.findIndex(
       (session): boolean => session.id === sessionId
     )
@@ -189,7 +201,6 @@ const App = (): JSX.Element => {
     const updatedSession = { ...session, sets: updatedSets }
     const updatedSessions = [...activeSessions]
     updatedSessions.splice(sessionIndexToUpdate, 1, updatedSession)
-    console.log("updatedSessions", updatedSessions)
     setActiveSessions(updatedSessions)
   }
 
@@ -214,7 +225,6 @@ const App = (): JSX.Element => {
         newSetData[field.id] = { ...field }
       }
     )
-    console.log("newSetData", newSetData)
 
     const nextSets = [
       ...sessionToUpdate.sets,
@@ -223,8 +233,6 @@ const App = (): JSX.Element => {
     const sessionWithNewSet = { ...sessionToUpdate, sets: nextSets }
     const updatedSessions = [...activeSessions]
     updatedSessions.splice(indexToUpdate, 1, sessionWithNewSet)
-
-    console.log("updatedSessions", updatedSessions)
     setActiveSessions(updatedSessions)
   }
 
@@ -241,8 +249,6 @@ const App = (): JSX.Element => {
       )
       return
     }
-
-    console.log("set session selected", selected)
 
     setActiveSessions([
       ...activeSessions.map(
@@ -261,6 +267,7 @@ const App = (): JSX.Element => {
           <ActiveSessions
             sessions={activeSessions}
             onChangeSessionDate={handleChangeSessionDate}
+            onChangeSessionNotes={handleChangeSessionNotes}
             onChangeSet={handleChangeSet}
             onAddSet={handleAddSet}
             onChangeSelectedSession={handleChangeSelectedSession}

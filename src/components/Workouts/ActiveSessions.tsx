@@ -11,6 +11,7 @@ import SessionTab from "./SessionTab"
 interface Props {
   sessions: WorkoutSession[]
   onChangeSessionDate: (sessionId: string, date: Date | null) => void
+  onChangeSessionNotes: (sessionId: string, notes: string) => void
   onChangeSet: (
     sessionId: string,
     setId: string,
@@ -189,6 +190,7 @@ const CompleteButton = styled(Button)`
 const ActiveSessions = ({
   sessions,
   onChangeSessionDate,
+  onChangeSessionNotes,
   onChangeSet,
   onAddSet,
   onChangeSelectedSession,
@@ -265,7 +267,14 @@ const ActiveSessions = ({
             )}
             <Sidebar>
               <Form>
-                <TextArea placeholder="Notes" />
+                <TextArea
+                  key={`session-${selectedSession.id}-notes`}
+                  placeholder="Notes"
+                  value={selectedSession.notes}
+                  onChange={(e, { value }): void =>
+                    onChangeSessionNotes(selectedSession.id, String(value))
+                  }
+                />
               </Form>
               <CompleteButton
                 onClick={(): void => setRequestComplete(true)}
