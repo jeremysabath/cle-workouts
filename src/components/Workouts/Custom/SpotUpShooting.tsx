@@ -182,6 +182,9 @@ const SpotUpShooting = ({
           <Button negative onClick={handleMiss} content="Miss" size="large" />
         </Buttons>
       </Popup>
+      <em style={{ fontSize: "14px", opacity: 0.6 }}>
+        Demo: Try tapping on the top of the key.
+      </em>
     </Container>
   )
 }
