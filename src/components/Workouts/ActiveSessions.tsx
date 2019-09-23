@@ -72,7 +72,12 @@ const AddSessionButton = styled(Button)`
   }
 `
 
-const ActiveSession = styled.section``
+const ActiveSession = styled.section`
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 1em;
+`
 
 const ActiveSessions = ({
   sessions,
@@ -90,6 +95,7 @@ const ActiveSessions = ({
           {sessions.map(
             (session): JSX.Element => (
               <SessionTab
+                key={`session-tab-${session.id}`}
                 session={session}
                 onClick={(): void => onChangeSelectedSession(session.id)}
               />

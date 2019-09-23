@@ -33,7 +33,7 @@ export interface OptionsWorkoutField extends BaseWorkoutField {
 }
 
 export interface OptionsWorkoutData extends OptionsWorkoutField {
-  value?: { id: string; name: string }
+  value?: string // the option ID
 }
 
 export interface TextWorkoutField extends BaseWorkoutField {
@@ -72,7 +72,7 @@ export type WorkoutData =
   | NumberWorkoutData
   | TimeWorkoutData
 
-export type WorkoutFieldValue = { id: string; name: string } | string | number
+export type WorkoutFieldValue = string | number
 
 export interface Workout {
   id: string

@@ -2,10 +2,20 @@ import React, { useState } from "react"
 import styled, { ThemeProvider } from "styled-components"
 import { AnimatePresence } from "framer-motion"
 import Start from "../Start/Start"
-import { WorkoutSession, Workout, Player, WorkoutFieldValue } from "../../types"
+import {
+  WorkoutSession,
+  Workout,
+  Player,
+  WorkoutFieldValue,
+  WorkoutSet,
+  WorkoutData,
+  WorkoutFieldType,
+  OptionsWorkoutData,
+} from "../../types"
 import ActiveSessions from "../Workouts/ActiveSessions"
 import NewSession from "../Workouts/NewSession"
 import api from "../../api"
+import { randomId } from "../../helpers"
 
 const theme = {
   colors: {
@@ -105,10 +115,81 @@ const App = (): JSX.Element => {
     nextValue: WorkoutFieldValue
   ): void => {
     console.log("handleChangeSet", sessionId, setId, fieldId, nextValue)
+
+    const sessionIndexToUpdate = activeSessions.findIndex(
+      (session): boolean => session.id === sessionId
+    )
+
+    if (sessionIndexToUpdate < 0) {
+      console.error(
+        "Couldn't find session, can't edit set.",
+        sessionId,
+        activeSessions
+      )
+      return
+    }
+
+    const session = activeSessions[sessionIndexToUpdate]
+    const setIndexToUpdate = session.sets.findIndex(
+      (set): boolean => set.id === setId
+    )
+
+    if (setIndexToUpdate < 0) {
+      console.error(
+        "Couldn't find set, can't edit.",
+        session,
+        setId,
+        activeSessions
+      )
+      return
+    }
+
+    const set = { ...session.sets[setIndexToUpdate] }
+    set.data[fieldId].value = nextValue
+
+    const updatedSets = [...session.sets]
+    updatedSets.splice(setIndexToUpdate, 1, set)
+
+    const updatedSession = { ...session, sets: updatedSets }
+    const updatedSessions = [...activeSessions]
+    updatedSessions.splice(sessionIndexToUpdate, 1, updatedSession)
+    console.log("updatedSessions", updatedSessions)
+    setActiveSessions(updatedSessions)
   }
 
   const handleAddSet = (sessionId: string): void => {
-    console.log("handleAddSet", sessionId)
+    const indexToUpdate = activeSessions.findIndex(
+      (session): boolean => session.id === sessionId
+    )
+
+    if (indexToUpdate < 0) {
+      console.error(
+        "Couldn't find session, can't add set.",
+        sessionId,
+        activeSessions
+      )
+      return
+    }
+
+    const sessionToUpdate = activeSessions[indexToUpdate]
+    const newSetData: { [id: string]: WorkoutData } = {}
+    sessionToUpdate.workout.fields.forEach(
+      (field): void => {
+        newSetData[field.id] = { ...field }
+      }
+    )
+    console.log("newSetData", newSetData)
+
+    const nextSets = [
+      ...sessionToUpdate.sets,
+      { id: randomId(), data: newSetData },
+    ]
+    const sessionWithNewSet = { ...sessionToUpdate, sets: nextSets }
+    const updatedSessions = [...activeSessions]
+    updatedSessions.splice(indexToUpdate, 1, sessionWithNewSet)
+
+    console.log("updatedSessions", updatedSessions)
+    setActiveSessions(updatedSessions)
   }
 
   const handleChangeSelectedSession = (id: string): void => {

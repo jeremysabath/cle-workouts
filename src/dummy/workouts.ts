@@ -20,7 +20,7 @@ const workouts: Workout[] = [
     id: "spot-shooting",
     name: "Spot-up Shooting",
     category: categories.shooting,
-    hasCustomForm: true,
+    // hasCustomForm: true,
     fields: [
       {
         id: "location",
@@ -89,6 +89,16 @@ const workouts: Workout[] = [
           },
         ],
       },
+      {
+        id: "makes",
+        name: "Makes",
+        type: WorkoutFieldType.Number,
+      },
+      {
+        id: "attempts",
+        name: "Attempts",
+        type: WorkoutFieldType.Number,
+      },
     ],
   },
   {
@@ -111,6 +121,7 @@ const workouts: Workout[] = [
         id: "rest",
         name: "Rest",
         type: WorkoutFieldType.Time,
+        unit: "seconds",
       },
     ],
   },

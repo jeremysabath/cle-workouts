@@ -6,6 +6,7 @@ import { Player, Workout, WorkoutSession } from "../../types"
 import Players from "../Players/Players"
 import PlayerCard from "../Players/PlayerCard"
 import Workouts from "./Workouts"
+import { randomId } from "../../helpers"
 
 interface Props {
   getPlayers: () => void
@@ -110,7 +111,7 @@ const NewSession = ({
     }
 
     onStart({
-      id: String(Math.floor(Math.random() * 100000)),
+      id: randomId(),
       player,
       workout,
       date: new Date(),
