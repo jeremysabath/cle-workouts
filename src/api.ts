@@ -1,4 +1,5 @@
 import { Player, Workout } from "./types"
+import sortBy from "lodash.sortby"
 
 // Dummy data
 import dummyPlayers from "./dummy/players"
@@ -15,7 +16,10 @@ const getWorkouts = async (): Promise<Workout[]> => {
   // TODO: Actually get workouts via API
 
   await new Promise((resolve): number => window.setTimeout(resolve, 500))
-  return dummyWorkouts
+
+  // Sort workouts by name.
+  const sorted = sortBy(dummyWorkouts, ["name"])
+  return sorted
 }
 
 export default {

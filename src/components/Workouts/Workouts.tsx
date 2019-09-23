@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { Button, Table } from "semantic-ui-react"
 import { Workout, WorkoutCategory } from "../../types"
+import sortBy from "lodash.sortby"
 
 interface Props {
   loading: boolean
@@ -92,6 +93,7 @@ const Workouts = ({
     }
   )
   console.log("categories: ", categories)
+  const sortedCategories = sortBy(categories, ["name"])
 
   const [
     selectedCategory,
@@ -114,7 +116,7 @@ const Workouts = ({
         <WorkoutsContainer>
           {!hideCategories && (
             <Categories>
-              {categories.map(
+              {sortedCategories.map(
                 (category): JSX.Element | null => {
                   const selected = !!(
                     selectedCategory && selectedCategory.id === category.id

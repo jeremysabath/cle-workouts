@@ -132,8 +132,26 @@ const workouts: Workout[] = [
     ],
   },
   {
-    id: "treadmill",
-    name: "Treadmill",
+    id: "pullups",
+    name: "Pull-ups",
+    category: categories.strength,
+    fields: [
+      {
+        id: "reps",
+        name: "Reps",
+        type: WorkoutFieldType.Number,
+      },
+      {
+        id: "rest",
+        name: "Rest",
+        type: WorkoutFieldType.Time,
+        unit: "seconds",
+      },
+    ],
+  },
+  {
+    id: "treadmill-interval",
+    name: "Treadmill (interval)",
     category: categories.conditioning,
     fields: [
       {
