@@ -16,6 +16,14 @@ import ActiveSessions from "../Workouts/ActiveSessions"
 import NewSession from "../Workouts/NewSession"
 import api from "../../api"
 import { randomId } from "../../helpers"
+import courtEmpty from "../../assets/court-empty.png"
+import courtTopSelected from "../../assets/court-top-selected.png"
+
+// preload court images
+const courtEmptyImg = new Image()
+courtEmptyImg.src = courtEmpty
+const courtTopSelectedImg = new Image()
+courtTopSelectedImg.src = courtTopSelected
 
 const theme = {
   colors: {

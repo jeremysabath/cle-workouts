@@ -99,7 +99,7 @@ const players: Player[] = [
     name: "Tristan Thompson",
     nickname: "TT",
     imageSrc: thompson,
-    position: "Guard",
+    position: "Center-Forward",
     number: "13",
   },
   {

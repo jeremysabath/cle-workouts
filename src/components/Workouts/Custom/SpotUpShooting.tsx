@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { Popup, Button } from "semantic-ui-react"
 import courtEmpty from "../../../assets/court-empty.png"
@@ -65,6 +65,14 @@ const StatOverlay = styled.div`
   font-weight: 700;
 `
 
+const Dismisser = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+`
+
 const CourtLeft = styled.div`
   position: absolute;
   top: 0;
@@ -95,16 +103,36 @@ const SpotUpShooting = ({
   onAddSet,
 }: Props): JSX.Element => {
   const [topSelected, setTopSelected] = useState(false)
-  const [makes, setMakes] = useState(0)
-  const [attempts, setAttempts] = useState(0)
+  // const [makes, setMakes] = useState(0)
+  // const [attempts, setAttempts] = useState(0)
+
+  const dummySet = session.sets[0]
+  const makes =
+    dummySet && typeof dummySet.data.makes.value === "number"
+      ? dummySet.data.makes.value
+      : 0
+  const attempts =
+    dummySet && typeof dummySet.data.attempts.value === "number"
+      ? dummySet.data.attempts.value
+      : 0
+  console.log("makes/attempts", makes, attempts)
+
+  useEffect((): void => {
+    if (session.sets.length === 0) onAddSet(session.id)
+  }, [])
 
   const handleMake = (): void => {
-    setMakes(prevMakes => prevMakes + 1)
-    setAttempts(prevAttempts => prevAttempts + 1)
+    onChangeSet(session.id, session.sets[0].id, "makes", makes + 1)
+    onChangeSet(session.id, session.sets[0].id, "attempts", attempts + 1)
+
+    // setMakes(prevMakes => prevMakes + 1)
+    // setAttempts(prevAttempts => prevAttempts + 1)
   }
 
   const handleMiss = (): void => {
-    setAttempts(prevAttempts => prevAttempts + 1)
+    onChangeSet(session.id, session.sets[0].id, "attempts", attempts + 1)
+
+    // setAttempts(prevAttempts => prevAttempts + 1)
   }
 
   const percentage = (): string =>
@@ -116,9 +144,10 @@ const SpotUpShooting = ({
         src={topSelected ? courtTopSelected : courtEmpty}
         alt={topSelected ? "court top of key 3 highlight" : "half court view"}
       />
-      <CourtLeft onClick={(): void => setTopSelected(false)} />
+      {topSelected && <Dismisser onClick={(): void => setTopSelected(false)} />}
+      {/* <CourtLeft onClick={(): void => setTopSelected(false)} />
       <CourtRight onClick={(): void => setTopSelected(false)} />
-      <CloseToBasket onClick={(): void => setTopSelected(false)} />
+      <CloseToBasket onClick={(): void => setTopSelected(false)} /> */}
       {!topSelected && attempts > 0 && (
         <StatOverlay>
           <p>

@@ -45,13 +45,14 @@ const WorkoutTabs = styled.div`
   align-items: center;
   width: fit-content;
   overflow-x: auto;
+  overflow-y: hidden;
   margin-left: auto;
 
   @media (min-width: ${({ theme }): string =>
       theme.responsive.phoneLandscape}px) {
     flex-direction: column;
     width: unset;
-    overflow-x: unset;
+    overflow-x: hidden;
 
     height: fit-content;
     overflow-y: auto;
