@@ -33,10 +33,13 @@ const Container = styled.div`
 const TabContainer = styled.section`
   display: flex;
   align-items: center;
+  background-color: rgba(71, 15, 35, 0.7);
+  box-shadow: inset 0px 10px 9px -9px rgba(0, 0, 0, 0.5);
 
   @media (min-width: ${({ theme }): string =>
       theme.responsive.phoneLandscape}px) {
     flex-direction: column;
+    box-shadow: inset -10px 0px 9px -9px rgba(0, 0, 0, 0.5);
   }
 `
 
@@ -62,14 +65,15 @@ const WorkoutTabs = styled.div`
 `
 
 const AddSessionButton = styled(Button)`
-  margin-top: 1em;
   flex-shrink: 0;
-  margin-right: auto;
+  margin: 0 auto 0 0.5em;
+  box-shadow: 0px 2px 8px;
+  color: ${({ theme }): string => theme.colors.wine};
+  background-color: white;
 
   @media (min-width: ${({ theme }): string =>
       theme.responsive.phoneLandscape}px) {
-    margin-right: unset;
-    margin-bottom: auto;
+    margin: 0.5em 0 auto 0;
   }
 `
 
