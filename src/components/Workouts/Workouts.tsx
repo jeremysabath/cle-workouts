@@ -37,8 +37,8 @@ const CategoryButton = styled(Button)<{ selected: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
-    ${({ selected, theme }): string =>
-      selected ? `background-color: ${theme.colors.gold} !important;` : ""}
+    background-color: ${({ selected, theme }): string =>
+      selected ? ` ${theme.colors.gold} !important;` : "unset"};
     margin: 0;
   }
 
