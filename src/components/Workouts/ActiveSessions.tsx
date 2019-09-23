@@ -34,15 +34,19 @@ const Container = styled.div`
 `
 
 const TabContainer = styled.section`
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   background-color: rgba(71, 15, 35, 0.7);
   box-shadow: inset 0px 10px 9px -9px rgba(0, 0, 0, 0.5);
+  padding-right: 0.5em;
 
   @media (min-width: ${({ theme }): string =>
       theme.responsive.phoneLandscape}px) {
     flex-direction: column;
     box-shadow: inset -10px 0px 9px -9px rgba(0, 0, 0, 0.5);
+    padding-right: 0;
+    padding-bottom: 0.5em;
   }
 `
 
@@ -52,6 +56,7 @@ const WorkoutTabs = styled.div`
   width: fit-content;
   overflow-x: auto;
   overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   margin-left: auto;
 
   @media (min-width: ${({ theme }): string =>
@@ -84,6 +89,7 @@ const ActiveSession = styled.section`
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 1em;
 
   & > h1 {

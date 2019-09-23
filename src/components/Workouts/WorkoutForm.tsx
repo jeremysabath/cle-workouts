@@ -29,6 +29,7 @@ interface Props {
 const TableContainer = styled.section`
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 `
 
 const CellContents = styled.div`
