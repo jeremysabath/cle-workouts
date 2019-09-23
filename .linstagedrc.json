@@ -1,6 +1,6 @@
 {
   "linters": {
-    "*.{js,jsx,ts,tsx}": ["eslint"],
-    "*.{js,jsx,ts,tsx,json,css,scss}": ["prettier --write", "git add"]
+    "./src/**/.{js,jsx,ts,tsx}": ["eslint"],
+    "./src/**/.{js,jsx,ts,tsx,json,css,scss}": ["prettier --write", "git add"]
   }
 }
