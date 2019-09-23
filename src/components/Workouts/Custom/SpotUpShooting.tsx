@@ -34,6 +34,7 @@ const TopOfTheKey = styled.div`
 
 const PopupInner = styled.div`
   text-align: center;
+  font-size: 1.2em;
 
   & h3 {
     margin-bottom: 0.5em;
@@ -63,6 +64,7 @@ const StatOverlay = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 700;
+  font-size: 1.25em;
 `
 
 const Dismisser = styled.div`
@@ -169,8 +171,8 @@ const SpotUpShooting = ({
           </p>
         </PopupInner>
         <Buttons>
-          <Button positive onClick={handleMake} content="Make" />
-          <Button negative onClick={handleMiss} content="Miss" />
+          <Button positive onClick={handleMake} content="Make" size="large" />
+          <Button negative onClick={handleMiss} content="Miss" size="large" />
         </Buttons>
       </Popup>
     </Container>
