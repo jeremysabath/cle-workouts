@@ -20,7 +20,7 @@ const workouts: Workout[] = [
     id: "spot-shooting",
     name: "Spot-up Shooting",
     category: categories.shooting,
-    // hasCustomForm: true,
+    hasCustomForm: true,
     fields: [
       {
         id: "location",

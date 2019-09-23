@@ -92,7 +92,7 @@ const WorkoutForm = ({
 
       case WorkoutFieldType.Options:
         return (
-          <Table.Cell>
+          <Table.Cell key={`set-${setId}-${data.id}`}>
             <CellContents>
               <Dropdown
                 options={data.options.map(
@@ -127,9 +127,8 @@ const WorkoutForm = ({
 
   return (
     <div>
-      <h1>Sets</h1>
       <TableContainer>
-        <Table celled collapsing unstackable>
+        <Table celled unstackable>
           <Table.Header>
             <Table.Row>
               {workout.fields.map(

@@ -102,4 +102,6 @@ export interface WorkoutSession {
   sets: WorkoutSet[]
   date: Date
   selected: boolean
+  notes?: string
+  injury?: boolean
 }

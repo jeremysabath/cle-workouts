@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
-import { Button } from "semantic-ui-react"
+import { Button, TextArea, Form } from "semantic-ui-react"
 import { WorkoutSession, WorkoutFieldValue } from "../../types"
 import CustomWorkout from "./CustomWorkout"
 import WorkoutForm from "./WorkoutForm"
@@ -77,6 +77,46 @@ const ActiveSession = styled.section`
   height: 100%;
   overflow-y: auto;
   padding: 1em;
+
+  & > h1 {
+    margin-bottom: 0.25em;
+  }
+
+  & > h2 {
+    margin-top: 0;
+    margin-bottom: 1.5em;
+    font-size: 1em;
+    font-weight: 500;
+  }
+`
+
+const SessionContent = styled.div`
+  & > * {
+    margin-bottom: 1em;
+  }
+
+  @media (min-width: ${({ theme }): string => theme.responsive.largeTablet}px) {
+    display: flex;
+    flex-wrap: wrap;
+
+    & > *:first-child {
+      flex: 3;
+      margin-right: 1em;
+    }
+  }
+`
+
+const Sidebar = styled.section`
+  height: 100%;
+  flex: 2;
+
+  & > form {
+    margin-bottom: 1em;
+  }
+`
+
+const CompleteButton = styled(Button)`
+  width: 100%;
 `
 
 const ActiveSessions = ({
@@ -87,6 +127,8 @@ const ActiveSessions = ({
   onAddSession,
 }: Props): JSX.Element => {
   const selectedSession = sessions.find((session): boolean => session.selected)
+
+  const [requestComplete, setRequestComplete] = useState(false)
 
   return (
     <Container>
@@ -114,15 +156,31 @@ const ActiveSessions = ({
         <ActiveSession>
           <h1>{selectedSession.player.name}</h1>
           <h2>{selectedSession.workout.name}</h2>
-          {selectedSession.workout.hasCustomForm ? (
-            <CustomWorkout session={selectedSession} />
-          ) : (
-            <WorkoutForm
-              session={selectedSession}
-              onChangeSet={onChangeSet}
-              onAddSet={onAddSet}
-            />
-          )}
+          <SessionContent>
+            {selectedSession.workout.hasCustomForm ? (
+              <CustomWorkout
+                session={selectedSession}
+                onChangeSet={onChangeSet}
+                onAddSet={onAddSet}
+              />
+            ) : (
+              <WorkoutForm
+                session={selectedSession}
+                onChangeSet={onChangeSet}
+                onAddSet={onAddSet}
+              />
+            )}
+            <Sidebar>
+              <Form>
+                <TextArea placeholder="Notes" />
+              </Form>
+              <CompleteButton
+                onClick={(): void => setRequestComplete(true)}
+                content="Complete workout"
+                size="huge"
+              />
+            </Sidebar>
+          </SessionContent>
         </ActiveSession>
       )}
     </Container>
