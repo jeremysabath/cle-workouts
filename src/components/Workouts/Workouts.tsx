@@ -40,6 +40,7 @@ const CategoryButton = styled(Button)<{ selected: boolean }>`
     background-color: ${({ selected, theme }): string =>
       selected ? ` ${theme.colors.gold} !important;` : "unset"};
     margin: 0;
+    color: rgba(0, 0, 0, 0.8) !important;
   }
 
   & img {

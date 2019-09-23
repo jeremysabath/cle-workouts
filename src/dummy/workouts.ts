@@ -1,5 +1,6 @@
 import hoop from "../assets/icons/hoop.svg"
 import barbell from "../assets/icons/barbell.svg"
+import running from "../assets/icons/running.svg"
 import { WorkoutCategory, Workout, WorkoutFieldType } from "../types"
 
 const categories: { [name: string]: WorkoutCategory } = {
@@ -12,6 +13,11 @@ const categories: { [name: string]: WorkoutCategory } = {
     id: "strength",
     name: "Strength",
     iconSrc: barbell,
+  },
+  conditioning: {
+    id: "conditioning",
+    name: "Conditioning",
+    iconSrc: running,
   },
 }
 
@@ -116,6 +122,102 @@ const workouts: Workout[] = [
         id: "reps",
         name: "Reps",
         type: WorkoutFieldType.Number,
+      },
+      {
+        id: "rest",
+        name: "Rest",
+        type: WorkoutFieldType.Time,
+        unit: "seconds",
+      },
+    ],
+  },
+  {
+    id: "treadmill",
+    name: "Treadmill",
+    category: categories.conditioning,
+    fields: [
+      {
+        id: "speed",
+        name: "Speed",
+        type: WorkoutFieldType.Number,
+        unit: "mph",
+      },
+      {
+        id: "incline",
+        name: "Incline",
+        type: WorkoutFieldType.Number,
+        unit: "%",
+      },
+      {
+        id: "duration",
+        name: "Duration",
+        type: WorkoutFieldType.Time,
+        unit: "minutes",
+      },
+      {
+        id: "rest",
+        name: "Rest",
+        type: WorkoutFieldType.Time,
+        unit: "seconds",
+      },
+    ],
+  },
+  {
+    id: "stair-sprints",
+    name: "Stair sprints",
+    category: categories.conditioning,
+    fields: [
+      {
+        id: "duration",
+        name: "Duration",
+        type: WorkoutFieldType.Time,
+        unit: "seconds",
+      },
+      {
+        id: "rest",
+        name: "Rest",
+        type: WorkoutFieldType.Time,
+        unit: "seconds",
+      },
+    ],
+  },
+  {
+    id: "dynamic-stretch",
+    name: "Dynamic stretches",
+    category: categories.conditioning,
+    fields: [
+      {
+        id: "stretch",
+        name: "Stretch",
+        type: WorkoutFieldType.Options,
+        options: [
+          {
+            id: "ball-quad-stretch",
+            name: "Ball quad stretch",
+          },
+          {
+            id: "hamstring-rocker",
+            name: "Hamstring rocker",
+          },
+          {
+            id: "split-stance-side",
+            name: "Split-stance side lean",
+          },
+          {
+            id: "split-stance-spine",
+            name: "Split-stance spine rotation",
+          },
+          {
+            id: "wall-lat-stretch",
+            name: "Wall lat stretch",
+          },
+        ],
+      },
+      {
+        id: "duration",
+        name: "Duration",
+        type: WorkoutFieldType.Time,
+        unit: "seconds",
       },
       {
         id: "rest",

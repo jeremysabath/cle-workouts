@@ -187,6 +187,11 @@ const CompleteButton = styled(Button)`
   width: 100%;
   background-color: ${({ theme }): string => theme.colors.wine};
   color: white;
+
+  &:focus {
+    background-color: ${({ theme }): string => theme.colors.wine};
+    color: white;
+  }
 `
 
 const ActiveSessions = ({
