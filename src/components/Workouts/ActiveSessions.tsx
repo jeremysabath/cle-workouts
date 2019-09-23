@@ -30,9 +30,8 @@ const Container = styled.div`
   }
 `
 
-const WorkoutTabs = styled.section`
+const TabContainer = styled.section`
   display: flex;
-  justify-content: center;
   align-items: center;
 
   @media (min-width: ${({ theme }): string =>
@@ -41,8 +40,36 @@ const WorkoutTabs = styled.section`
   }
 `
 
+const WorkoutTabs = styled.div`
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  overflow-x: auto;
+  margin-left: auto;
+
+  @media (min-width: ${({ theme }): string =>
+      theme.responsive.phoneLandscape}px) {
+    flex-direction: column;
+    width: unset;
+    overflow-x: unset;
+
+    height: fit-content;
+    overflow-y: auto;
+    margin-left: unset;
+    margin-top: auto;
+  }
+`
+
 const AddSessionButton = styled(Button)`
   margin-top: 1em;
+  flex-shrink: 0;
+  margin-right: auto;
+
+  @media (min-width: ${({ theme }): string =>
+      theme.responsive.phoneLandscape}px) {
+    margin-right: unset;
+    margin-bottom: auto;
+  }
 `
 
 const ActiveSession = styled.section``
@@ -58,22 +85,25 @@ const ActiveSessions = ({
 
   return (
     <Container>
-      <WorkoutTabs>
-        {sessions.map(
-          (session): JSX.Element => (
-            <SessionTab
-              session={session}
-              onClick={(): void => onChangeSelectedSession(session.id)}
-            />
-          )
-        )}
+      <TabContainer>
+        <WorkoutTabs>
+          {sessions.map(
+            (session): JSX.Element => (
+              <SessionTab
+                session={session}
+                onClick={(): void => onChangeSelectedSession(session.id)}
+              />
+            )
+          )}
+        </WorkoutTabs>
         <AddSessionButton
-          size="huge"
+          size="big"
           circular
           icon="add"
           onClick={onAddSession}
         />
-      </WorkoutTabs>
+      </TabContainer>
+
       {selectedSession && (
         <ActiveSession>
           <h1>{selectedSession.player.name}</h1>

@@ -9,8 +9,9 @@ interface Props {
 }
 
 const Tab = styled.div`
-  width: 120px;
+  width: 90px;
   text-align: center;
+  flex-shrink: 0;
 
   & img {
     width: 100%;
@@ -21,6 +22,11 @@ const Tab = styled.div`
   & h3 {
     font-size: 1.2em;
     margin: 0;
+  }
+
+  @media (min-width: ${({ theme }): string =>
+      theme.responsive.phoneLandscape}px) {
+    width: 120px;
   }
 `
 
