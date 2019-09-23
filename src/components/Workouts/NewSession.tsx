@@ -33,6 +33,7 @@ const Container = styled(motion.div)`
   background-color: white;
   color: black;
   padding: 1em;
+  z-index: 2;
 `
 
 const Header = styled.div`
@@ -57,6 +58,10 @@ const SectionContainer = styled.div<{ selected: boolean }>`
   /* display: ${({ selected }): string => (selected ? "flex" : "block")}; */
   display: block;
   margin-bottom: 2em;
+
+  &:last-child {
+    margin-bottom: 1em;
+  }
 
   & h2 {
     margin-right: 1em;
@@ -84,6 +89,18 @@ const WorkoutsWrapper = styled.div<{ selected: boolean }>`
 const DeleteButton = styled(Button)`
   height: 35px;
   width: 35px;
+`
+
+const StartButton = styled(Button)`
+  width: 100%;
+  background-color: ${({ theme }): string => theme.colors.wine};
+  color: white;
+  margin-bottom: 1em;
+
+  @media (min-width: ${({ theme }): string =>
+      theme.responsive.phoneLandscape}px) {
+    width: unset;
+  }
 `
 
 const NewSession = ({
@@ -143,62 +160,63 @@ const NewSession = ({
         <a onClick={onCancel}>Cancel</a>
         <h1>New Workout</h1>
       </Header>
-      <SectionContainer selected={!!player}>
-        <h2>Select player: </h2>
-        {player ? (
-          <SelectedPlayer>
-            <PlayerCard
-              player={player}
-              onSelect={(): void => setPlayer(null)}
-              small
-            />
-            <DeleteButton
-              circular
-              icon="delete"
-              onClick={(): void => setPlayer(null)}
-            />
-          </SelectedPlayer>
-        ) : (
-          <Players
-            loading={playersLoading}
-            error={playersError}
-            players={players}
-            onSelect={setPlayer}
-          />
-        )}
-      </SectionContainer>
-      {player && (
-        <SectionContainer selected={!!workout}>
-          <h2>Select workout: </h2>
-          <WorkoutsWrapper selected={!!workout}>
-            <Workouts
-              loading={workoutsLoading}
-              error={workoutsError}
-              workouts={workout ? [workout] : workouts}
-              onSelect={workout ? (): void => setWorkout(null) : setWorkout}
-              hideCategories={!!workout}
-            />
-            {workout && (
+      <div>
+        <SectionContainer selected={!!player}>
+          <h2>Select player: </h2>
+          {player ? (
+            <SelectedPlayer>
+              <PlayerCard
+                player={player}
+                onSelect={(): void => setPlayer(null)}
+                small
+              />
               <DeleteButton
                 circular
                 icon="delete"
-                onClick={(): void => setWorkout(null)}
+                onClick={(): void => setPlayer(null)}
               />
-            )}
-          </WorkoutsWrapper>
-          {!workout && (
-            <div style={{ marginTop: "1em", textAlign: "center" }}>
-              <a onClick={(): void => alert("Coming soon...")}>
-                Add a new workout
-              </a>
-            </div>
+            </SelectedPlayer>
+          ) : (
+            <Players
+              loading={playersLoading}
+              error={playersError}
+              players={players}
+              onSelect={setPlayer}
+            />
           )}
         </SectionContainer>
-      )}
+        {player && (
+          <SectionContainer selected={!!workout}>
+            <h2>Select workout: </h2>
+            <WorkoutsWrapper selected={!!workout}>
+              <Workouts
+                loading={workoutsLoading}
+                error={workoutsError}
+                workouts={workout ? [workout] : workouts}
+                onSelect={workout ? (): void => setWorkout(null) : setWorkout}
+                hideCategories={!!workout}
+              />
+              {workout && (
+                <DeleteButton
+                  circular
+                  icon="delete"
+                  onClick={(): void => setWorkout(null)}
+                />
+              )}
+            </WorkoutsWrapper>
+            {!workout && (
+              <div style={{ marginTop: "1em", textAlign: "center" }}>
+                <a onClick={(): void => alert("Coming soon...")}>
+                  Add a new workout
+                </a>
+              </div>
+            )}
+          </SectionContainer>
+        )}
+      </div>
+
       {player && workout && (
-        <Button size="huge" onClick={handleStart}>
-          Start!
-        </Button>
+        <StartButton size="huge" content="Start" onClick={handleStart} />
       )}
     </Container>
   )

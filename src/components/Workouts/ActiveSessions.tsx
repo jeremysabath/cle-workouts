@@ -185,6 +185,8 @@ const Sidebar = styled.section`
 
 const CompleteButton = styled(Button)`
   width: 100%;
+  background-color: ${({ theme }): string => theme.colors.wine};
+  color: white;
 `
 
 const ActiveSessions = ({
