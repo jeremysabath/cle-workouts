@@ -1,8 +1,6 @@
 # cle-workouts
 A flexible workout tracker for coaches and training staff.
 
-[View the demo.](https://cle-workouts.azurewebsites.net/)
-
 ## To build locally
 `npm install`
 
